@@ -1,5 +1,5 @@
-#ifndef VERTEX
-#define VERTEX
+#ifndef VERTEX_H
+#define VERTEX_H
 
 struct vertex {
     float x;
@@ -9,5 +9,7 @@ struct vertex {
     float b;
 };
 
-#endif // VERTEX
+
+
+#endif // VERTEX_H
 

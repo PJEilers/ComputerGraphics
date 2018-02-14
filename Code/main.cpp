@@ -1,7 +1,8 @@
 #include "mainwindow.h"
+#include "vertex.h"
 #include <QApplication>
 #include <QSurfaceFormat>
-#include "vertex.h"
+#include <QOpenGLShaderProgram>
 
 int main(int argc, char *argv[])
 {
@@ -18,40 +19,32 @@ int main(int argc, char *argv[])
 
     QSurfaceFormat::setDefaultFormat(glFormat);
     QOpenGLShaderProgram program;
-            program.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/vertshader.glsl");
-            program.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/vertshader.glsl");
-            program.link();
-            program.bind();
+
+    program.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/vertshader.glsl");
+    program.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/fragshader.glsl");
+    program.link();
+    program.bind();
 
     vertex v1, v2, v3;
-    v1.x=0.1;
-    v1.y=0.5;
-    v1.r=0.5;
-    v1.g=0.5;
-    v1.b=0.5;
-    v2.x=0.5;
-    v2.y=0.1;
-    v2.r=1;
-    v2.g=1;
-    v2.b=1;
-    v3.x=1;
-    v3.y=0;
-    v3.r=0.1;
-    v3.g=0.1;
-    v3.b=0.1;
-    vertex vArray[2];
-    vArray[0]=v1;
-    vArray[1]=v2;
-    vArray[2]=v3;
-
-    GLuint VBO[5];
-    GLuint VAO[5];
-
-    glGenBuffers(1, VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VertexVBOID);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(MyVertex)*3, &pvertex[0].x, GL_STATIC_DRAW);
-
-    glGenVertexArrays(1, VAO);
+    v1.x = -1;
+    v1.y = -1;
+    v1.r = 1;
+    v1.b = 0;
+    v1.g = 0;
+    v2.x = 1;
+    v2.y = -1;
+    v2.r = 0;
+    v2.b = 1;
+    v2.g = 0;
+    v3.x = 0.5;
+    v3.y = 1;
+    v3.r = 0;
+    v3.b = 0;
+    v3.g = 0;
+    vertex vArray [2];
+    vArray[0] = v1;
+    vArray [1] = v2;
+    vArray[2] = v3;
 
     MainWindow w;
     w.show();

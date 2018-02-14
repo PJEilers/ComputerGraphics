@@ -1,8 +1,8 @@
 #include "mainview.h"
 #include "math.h"
+
+
 #include <QDateTime>
-
-
 
 MainView::MainView(QWidget *parent) : QOpenGLWidget(parent) {
     qDebug() << "MainView constructor";
@@ -40,8 +40,7 @@ void MainView::resizeGL(int newWidth, int newHeight) {
     Q_UNUSED(newHeight)
 }
 
-void MainView::paintGL(GLuint* VBO, GLuint* VAO) {
-
+void MainView::paintGL() {
 
 }
 
