@@ -29,9 +29,6 @@ MainView::~MainView() {
 void MainView::initializeGL() {
 
 
-
-
-
     qDebug() << ":: Initializing OpenGL";
     initializeOpenGLFunctions();
 
@@ -48,7 +45,6 @@ void MainView::initializeGL() {
     glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
     qDebug() << ":: Using OpenGL" << qPrintable(glVersion);
 
-    QOpenGLShaderProgram program;
     program.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/vertshader.glsl");
     program.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/fragshader.glsl");
     program.link();
