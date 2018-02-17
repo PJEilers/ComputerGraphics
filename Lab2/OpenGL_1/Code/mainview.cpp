@@ -1,8 +1,9 @@
 #include "mainview.h"
 #include "math.h"
-#include "vertex.h"
 
 #include <QDateTime>
+
+#define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 /**
  * @brief MainView::MainView
@@ -29,6 +30,8 @@ MainView::~MainView() {
     debugLogger->stopLogging();
     glDeleteBuffers(1, vboCube);
     glDeleteVertexArrays(1, vaoCube);
+    glDeleteBuffers(1, vboPyramid);
+    glDeleteVertexArrays(1, vaoPyramid);
     qDebug() << "MainView destructor";
 }
 
@@ -73,73 +76,35 @@ void MainView::initializeGL() {
     createShaderProgram();
 
 
-    vertex cube [36] = {
 
-
-
-                            {1,1,1,1,0,0},
-                            {1,-1,-1,0,1,0},
-                            {1,1,-1,0,0,1},
-
-                            {-1,-1,-1,1,0,0},
-                            {1,-1,-1,0,1,0},
-                            {1,1,-1,0,0,1},
-
-                            {-1,-1,-1,1,0,0},
-                            {1,-1,-1,0,1,0},
-                            {1,1,-1,0,0,1},
-
-                            {-1,-1,-1,1,0,0},
-                            {-1,1,-1,0,1,0},
-                            {1,1,-1,0,0,1},
-
-                            {-1,-1,-1,1,0,0},
-                            {-1,1,1,0,1,0},
-                            {-1,1,-1,0,1,0},
-
-                            {-1,-1,1,1,0,0},
-                            {-1,-1,-1,0,1,0},
-                            {1,-1,-1,0,0,1},
-        {1,1,1,1,0,0},
-        {-1,1,1,0,1,0},
-        {1,-1,1,0,0,1},
-
-        {-1,-1,1,1,0,0},
-        {-1,1,1,0,1,0},
-        {1,-1,1,0,0,1},
-
-
-            {-1,-1,-1,1,0,0},
-            {-1,-1,1,0,1,0},
-            {1,-1,1,0,0,1},
-
-
-                            {-1,-1,1,1,0,0},
-                            {-1,1,1,0,1,0},
-                            {-1,-1,-1,0,0,1},
-
-
-
-                            {1,1,1,1,0,0},
-                            {1,-1,-1,0,1,0},
-                            {1,-1,1,0,0,1},
-
-                            {-1,-1,-1,1,0,0},
-                            {1,-1,-1,0,1,0},
-                            {1,-1,1,0,0,1},
-
-                            };
+    //Initializing cube
 
     glGenBuffers(12, vboCube);
+    glBindBuffer(GL_ARRAY_BUFFER, *vboCube);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*36, cube, GL_STATIC_DRAW);
     glGenVertexArrays(12, vaoCube);
     glBindVertexArray(*vaoCube);
-    glBindBuffer(GL_ARRAY_BUFFER, *vboCube);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*36, &cube[0].x, GL_STATIC_DRAW);
+
+
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(0));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(12));
 
-    #define BUFFER_OFFSET(i) ((char *)NULL + (i))
+
+
+    //Initializing pyramid
+
+    glGenBuffers(6, vboPyramid);
+    glBindBuffer(GL_ARRAY_BUFFER, *vboPyramid);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*18, pyramid, GL_STATIC_DRAW);
+    glGenVertexArrays(6, vaoPyramid);
+    glBindVertexArray(*vaoPyramid);
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(0));
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(12));
 }
@@ -170,7 +135,15 @@ void MainView::paintGL() {
     shaderProgram.bind();
 
     // Draw here
+
+    glBindVertexArray(*vaoCube);
+
     glDrawArrays(GL_TRIANGLES, 0,36);
+    glBindVertexArray(*vaoPyramid);
+
+    glDrawArrays(GL_TRIANGLES, 0,18);
+
+
 
     shaderProgram.release();
 }
