@@ -35,10 +35,18 @@ public:
     GLuint programId;
     GLint modelLoc;
     GLint projectionLoc;
+    GLint scaleLoc;
+    GLint rotationLoc;
 
     QMatrix4x4 cubeModel;
     QMatrix4x4 pyramidModel;
     QMatrix4x4 projection;
+    QMatrix4x4 scaling;
+    QMatrix4x4 rotation;
+
+    int oldRotateX = 0;
+    int oldRotateY = 0;
+    int oldRotateZ = 0;
 
 
 

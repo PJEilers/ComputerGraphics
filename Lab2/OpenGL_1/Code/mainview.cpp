@@ -77,22 +77,21 @@ void MainView::initializeGL() {
 
     vertex cube [36] = {
 
-        //Back
+        //Front
 
-        {-1,-1,1,1,0,0},
-        {1,1,1,0,1,0},
-        {1,-1,1,0,0,1},
+        {1,1,1,0,0,1},
+        {-1,-1,1,0,1,0},
+        {1,-1,1,1,0,0},
 
         {-1,-1,1,0,1,0},
         {1,1,1,0,0,1},
         {-1,1,1,1,0,0},
 
-        //Front
+        //Back
 
         {-1,-1,-1,1,0,0},
         {1,-1,-1,0,1,0},
         {1,1,-1,0,0,1},
-
 
         {-1,-1,-1,1,0,0},
         {1,1,-1,0,0,1},
@@ -110,13 +109,12 @@ void MainView::initializeGL() {
 
         //Right
 
-        {1,-1,1,1,0,0},
         {1,1,-1,0,0,1},
+        {1,-1,1,1,0,0},
         {1,-1,-1,0,1,0},
 
-        {1,1,-1,0,0,1},
         {1,-1,1,1,0,0},
-
+        {1,1,-1,0,0,1},
         {1,1,1,0,1,0},
 
         //Left
@@ -160,25 +158,23 @@ void MainView::initializeGL() {
         //Front
         {-1,-1,-1,1,0,0},
         {1,-1,-1,0,1,0},
-        {0,1,-1,0,0,1}, //z-coordinate should be 0, but I changed it so we can see both the cube and pyramid
+        {0,1,0,0,0,1},
 
-        //Left
+        //Right
         {1,-1,1,1,0,0},
         {1,-1,-1,0,1,0},
         {0,1,0,0,0,1},
 
-        //Right
-        {-1,-1,1,1,0,0},
+        //Left
         {-1,-1,-1,0,1,0},
+        {-1,-1,1,1,0,0},
         {0,1,0,0,0,1},
     };
 
 
-    //cubeModel.translate(QVector3D(-2,0,6));
-    //cubeModel.scale(0.4,0.4,0.4);
-   // pyramidModel.translate(QVector3D(-2,0,6));
-    //projection.perspective(60, 1.4, 1, 100);
-    projection.frustum(-10,10,-10,10,1,100);
+    cubeModel.translate(QVector3D(-2,0,-6));
+    pyramidModel.translate(QVector3D(2,0,-6));
+    projection.perspective(60, 1.4, 1, 50);
 
 
 
@@ -231,7 +227,7 @@ void MainView::createShaderProgram()
 
     modelLoc = glGetUniformLocation(programId, "modelTransform");
     projectionLoc = glGetUniformLocation(programId, "projectTransform");
-
+    scaleLoc = glGetUniformLocation(programId, "scaleTransform");
 
 }
 
@@ -252,16 +248,16 @@ void MainView::paintGL() {
 
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection.data());
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, cubeModel.data());
-
+    glUniformMatrix4fv(scaleLoc, 1, GL_FALSE, scaling.data());
     // Draw here
 
     glBindVertexArray(*vaoCube);
 
     glDrawArrays(GL_TRIANGLES, 0,36);
-//    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, pyramidModel.constData());
-//    glBindVertexArray(*vaoPyramid);
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, pyramidModel.data());
+    glBindVertexArray(*vaoPyramid);
 
-//    glDrawArrays(GL_TRIANGLES, 0,18);
+    glDrawArrays(GL_TRIANGLES, 0,18);
 
 
 
@@ -278,23 +274,40 @@ void MainView::paintGL() {
  */
 void MainView::resizeGL(int newWidth, int newHeight) 
 {
-    // TODO: Update projection to fit the new aspect ratio
-    Q_UNUSED(newWidth)
-    Q_UNUSED(newHeight)
+    float aspect = ((float) newWidth) / ((float) newHeight);
+    projection.setToIdentity();
+    projection.perspective(60, aspect, 1, 100);
+
 }
 
 // --- Public interface
 
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 {
+    cubeModel.rotate(rotateX, 1,0,0);
+    pyramidModel.rotate(rotateX, 1,0,0);
+
+    cubeModel.rotate(rotateY, 0 ,1, 0);
+    pyramidModel.rotate(rotateY, 0,1,0);
+
+    cubeModel.rotate(rotateZ, 0 ,0 ,1);
+    pyramidModel.rotate(rotateZ, 0,0,1);
+
     qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << "," << rotateZ << ")";
-    Q_UNIMPLEMENTED();
+    update();
+
 }
 
 void MainView::setScale(int scale)
 {
-    qDebug() << "Scale changed to " << scale;
-    Q_UNIMPLEMENTED();
+    if (scale < 140) {
+        float s = (float) scale/100;
+        qDebug() << "Scale changed to " << s;
+        scaling.setToIdentity();
+        scaling.scale(s,s,s);
+        update();
+    }
+
 }
 
 void MainView::setShadingMode(ShadingMode shading)
