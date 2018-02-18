@@ -80,13 +80,12 @@ void MainView::initializeGL() {
         //Back
 
         {-1,-1,1,1,0,0},
-        {1,-1,1,0,1,0},
-        {1,0,1,0,0,1},
+        {1,1,1,0,1,0},
+        {1,-1,1,0,0,1},
 
-
-        {-1,-1,1,1,0,0},
+        {-1,-1,1,0,1,0},
         {1,1,1,0,0,1},
-        {-1,1,1,0,1,0},
+        {-1,1,1,1,0,0},
 
         //Front
 
@@ -102,21 +101,22 @@ void MainView::initializeGL() {
         //Top
 
         {-1,1,1,1,0,0},
+        {1,1,-1,0,0,1},
         {1,1,1,0,1,0},
-        {1,1,-1,0,0,1},
 
-        {-1,1,1,1,0,0},
         {1,1,-1,0,0,1},
+        {-1,1,1,1,0,0},
         {-1,1,-1,0,1,0},
 
         //Right
 
         {1,-1,1,1,0,0},
+        {1,1,-1,0,0,1},
         {1,-1,-1,0,1,0},
-        {1,1,-1,0,0,1},
 
-        {1,-1,1,1,0,0},
         {1,1,-1,0,0,1},
+        {1,-1,1,1,0,0},
+
         {1,1,1,0,1,0},
 
         //Left
@@ -174,6 +174,14 @@ void MainView::initializeGL() {
     };
 
 
+    //cubeModel.translate(QVector3D(-2,0,6));
+    //cubeModel.scale(0.4,0.4,0.4);
+   // pyramidModel.translate(QVector3D(-2,0,6));
+    //projection.perspective(60, 1.4, 1, 100);
+    projection.frustum(-10,10,-10,10,1,100);
+
+
+
 
 
     //Initializing cube
@@ -216,6 +224,15 @@ void MainView::createShaderProgram()
     shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment,
                                            ":/shaders/fragshader.glsl");
     shaderProgram.link();
+
+    programId = shaderProgram.programId();
+
+    glUseProgram(programId);
+
+    modelLoc = glGetUniformLocation(programId, "modelTransform");
+    projectionLoc = glGetUniformLocation(programId, "projectTransform");
+
+
 }
 
 // --- OpenGL drawing
@@ -233,14 +250,18 @@ void MainView::paintGL() {
 
     shaderProgram.bind();
 
+    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection.data());
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, cubeModel.data());
+
     // Draw here
 
     glBindVertexArray(*vaoCube);
 
     glDrawArrays(GL_TRIANGLES, 0,36);
-    glBindVertexArray(*vaoPyramid);
+//    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, pyramidModel.constData());
+//    glBindVertexArray(*vaoPyramid);
 
-    glDrawArrays(GL_TRIANGLES, 0,18);
+//    glDrawArrays(GL_TRIANGLES, 0,18);
 
 
 

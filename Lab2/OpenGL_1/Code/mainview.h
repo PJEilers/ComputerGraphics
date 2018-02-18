@@ -32,6 +32,15 @@ public:
     GLuint vaoCube[12];
     GLuint vboPyramid[6];
     GLuint vaoPyramid[6];
+    GLuint programId;
+    GLint modelLoc;
+    GLint projectionLoc;
+
+    QMatrix4x4 cubeModel;
+    QMatrix4x4 pyramidModel;
+    QMatrix4x4 projection;
+
+
 
 
 
