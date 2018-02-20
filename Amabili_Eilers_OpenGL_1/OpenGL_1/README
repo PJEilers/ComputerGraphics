@@ -1,0 +1,10 @@
+### Assignment #1 - OpenGL 1 - Transformations and User Input - Computer Graphics course - made
+by Lorenzo Amabili(p2811542) and Pieter Jan Eilers(s2381575) .
+## The project consisted of implementing Model, View and Projection transformations to allow users to see the objects in 3D and to control scaling and rotation (by Qt Widgets) using a basic OpenGL application.
+We also implemented loading in a mesh Model and displaying this object.
+## Following the instructions, we completed the implementation of "Shape drawing" (using also the
+VNT format and glDrawElements, located in mainViewAlt), "Transformations", "Scaling and Rotation" and "Object Loading".
+## Prerequisites
+ : QtCreator (Qt 5.5.1), 
+## We used a GitHub repository for our project: https://github.com/PJEilers/ComputerGraphics
+

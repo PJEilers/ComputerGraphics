@@ -1,6 +1,7 @@
 #include "mainview.h"
 #include "math.h"
 
+
 #include <QDateTime>
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
@@ -75,6 +76,8 @@ void MainView::initializeGL() {
 
     createShaderProgram();
 
+    //Creating cube
+
     vertex cube [36] = {
 
         //Front
@@ -139,6 +142,8 @@ void MainView::initializeGL() {
 
     };
 
+    //Creating pyramid
+
     vertex pyramid[18] = {
 
         //Bottom
@@ -171,45 +176,18 @@ void MainView::initializeGL() {
         {0,1,0,0,0,1},
     };
 
+    //Transformations
 
     cubeModel.translate(QVector3D(-2,0,-6));
     pyramidModel.translate(QVector3D(2,0,-6));
     projection.perspective(60, 1.4, 1, 50);
 
-
-
-
-
     //Initializing cube
-
-    glGenBuffers(12, vboCube);
-    glBindBuffer(GL_ARRAY_BUFFER, *vboCube);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*36, cube, GL_STATIC_DRAW);
-    glGenVertexArrays(12, vaoCube);
-    glBindVertexArray(*vaoCube);
-
-
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(0));
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(12));
-
-
+    initializeCube(cube);
 
     //Initializing pyramid
+    initializePyramid(pyramid);
 
-    glGenBuffers(6, vboPyramid);
-    glBindBuffer(GL_ARRAY_BUFFER, *vboPyramid);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*18, pyramid, GL_STATIC_DRAW);
-    glGenVertexArrays(6, vaoPyramid);
-    glBindVertexArray(*vaoPyramid);
-
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(0));
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(12));
 }
 
 void MainView::createShaderProgram()
@@ -244,22 +222,22 @@ void MainView::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
+    //Applying transformations
+
     shaderProgram.bind();
 
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection.data());
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, cubeModel.data());
     glUniformMatrix4fv(scaleLoc, 1, GL_FALSE, scaling.data());
-    // Draw here
+
+    // Drawing objects
 
     glBindVertexArray(*vaoCube);
-
     glDrawArrays(GL_TRIANGLES, 0,36);
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, pyramidModel.data());
     glBindVertexArray(*vaoPyramid);
 
     glDrawArrays(GL_TRIANGLES, 0,18);
-
-
 
     shaderProgram.release();
 }
@@ -280,23 +258,58 @@ void MainView::resizeGL(int newWidth, int newHeight)
 
 }
 
-// --- Public interface
+/**
+ * @brief MainView::setRotation
+ *
+ * Setting rotation matrix
+ *
+ * @param rotateX
+ * @param rotateY
+ * @param rotateZ
+ */
 
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 {
-    cubeModel.rotate(rotateX, 1,0,0);
-    pyramidModel.rotate(rotateX, 1,0,0);
+    if(rotateX == 0 && rotateY == 0 && rotateZ == 0) {
+        cubeModel.setToIdentity();
+        pyramidModel.setToIdentity();
+        cubeModel.translate(QVector3D(-2,0,-6));
+        pyramidModel.translate(QVector3D(2,0,-6));
+    }
+    //Rotating around x-axis
 
-    cubeModel.rotate(rotateY, 0 ,1, 0);
-    pyramidModel.rotate(rotateY, 0,1,0);
+    float x = sin((float)rotateX*M_PI/180/2) *180/M_PI;;
+    float w = cos((float) rotateX*M_PI/180/2) *180/M_PI;
+    cubeModel.rotate(QQuaternion().fromAxisAndAngle(x,0,0,w));
+    pyramidModel.rotate(QQuaternion().fromAxisAndAngle(x,0,0,w));
 
-    cubeModel.rotate(rotateZ, 0 ,0 ,1);
-    pyramidModel.rotate(rotateZ, 0,0,1);
+    //Rotating around y-axis
+
+    float y = sin((float)rotateY*M_PI/180/2) *180/M_PI;;
+    w = cos((float) rotateY*M_PI/180/2) *180/M_PI;
+    cubeModel.rotate(QQuaternion().fromAxisAndAngle(0,y,0,w));
+    pyramidModel.rotate(QQuaternion().fromAxisAndAngle(0,y,0,w));
+
+    //Rotating around z-axis
+
+    float z = (float)sin((float)rotateZ*M_PI/180/2) *180/M_PI;;
+    w = (float)cos((float) rotateZ*M_PI/180/2) *180/M_PI;
+
+    cubeModel.rotate(QQuaternion().fromAxisAndAngle(0,0,z,w));
+    pyramidModel.rotate(QQuaternion().fromAxisAndAngle(0,0,z,w));
 
     qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << "," << rotateZ << ")";
     update();
 
 }
+
+/**
+ * @brief MainView::setScale
+ *
+ * Setting scaling matrix
+ *
+ * @param scale
+ */
 
 void MainView::setScale(int scale)
 {
@@ -327,4 +340,45 @@ void MainView::setShadingMode(ShadingMode shading)
  */
 void MainView::onMessageLogged( QOpenGLDebugMessage Message ) {
     qDebug() << " → Log:" << Message;
+}
+
+/**
+ * @brief MainView::initializeCube
+ *
+ * initialize the cube vbo and vao
+ */
+
+void MainView::initializeCube (vertex * cube) {
+    glGenBuffers(12, vboCube);
+    glBindBuffer(GL_ARRAY_BUFFER, *vboCube);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*36, cube, GL_STATIC_DRAW);
+    glGenVertexArrays(12, vaoCube);
+    glBindVertexArray(*vaoCube);
+
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(0));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(12));
+}
+
+/**
+ * @brief MainView::initializePyramid
+ *
+ * initialize the pyramid vbo and vao
+ */
+
+void MainView::initializePyramid (vertex * pyramid) {
+    glGenBuffers(6, vboPyramid);
+    glBindBuffer(GL_ARRAY_BUFFER, *vboPyramid);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*18, pyramid, GL_STATIC_DRAW);
+    glGenVertexArrays(6, vaoPyramid);
+    glBindVertexArray(*vaoPyramid);
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(0));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(12));
 }

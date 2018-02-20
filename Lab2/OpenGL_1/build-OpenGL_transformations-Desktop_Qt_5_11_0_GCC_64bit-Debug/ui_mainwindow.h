@@ -87,7 +87,7 @@ public:
         ScaleSlider = new QSlider(scalingBox);
         ScaleSlider->setObjectName(QStringLiteral("ScaleSlider"));
         ScaleSlider->setMinimum(1);
-        ScaleSlider->setMaximum(200);
+        ScaleSlider->setMaximum(125);
         ScaleSlider->setValue(100);
         ScaleSlider->setOrientation(Qt::Horizontal);
         ScaleSlider->setInvertedAppearance(false);
