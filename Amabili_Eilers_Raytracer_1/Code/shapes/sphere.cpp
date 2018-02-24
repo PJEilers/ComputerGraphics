@@ -24,20 +24,33 @@ Hit Sphere::intersect(Ray const &ray)
 
     // place holder for actual intersection calculation
 
-    Vector OC = (position - ray.O).normalized();
+    Vector OC = (position - ray.O);
     double tca = OC.dot(ray.D);
-    if (tca < 0.999) {
+    if (tca < 0) {
         return Hit::NO_HIT();
     }
     
-    double t = 1000;
     double d = sqrt(OC.dot(OC) - tca*tca);
+    
     if(d > r) {
         return Hit::NO_HIT();
     }
-    double thc = sqrt(r*r -d*d);
-    t = tca-thc;
+    double tch = sqrt(r*r -d*d);
+    double t1 = tca-tch;
+    double t2 = tca + tch;
     
+    
+    if (t1 > t2) std::swap(t1,t2);
+
+    
+
+    
+    if (t1 < 0) {
+        t1 = t2;
+        if (t1 < 0) return Hit::NO_HIT(); 
+    }
+
+    double t = t1;
     
 
     /****************************************************
@@ -49,7 +62,13 @@ Hit Sphere::intersect(Ray const &ray)
     * Insert calculation of the sphere's normal at the intersection point.
     ****************************************************/
 
-    Vector N /* = ... */;
+ 
+    
+    Vector p = ray.D*t;
+    Vector phit = ray.O + p;
+    Vector N = phit - position;
+    
+    N.normalize();
 
     return Hit(t,N);
 }

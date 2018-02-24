@@ -32,6 +32,13 @@ Color Scene::trace(Ray const &ray)
     Point hit = ray.at(min_hit.t);                 //the hit point
     Vector N = min_hit.N;                          //the normal at hit point
     Vector V = -ray.D;                             //the view vector
+    
+    printf("%lf\n",material.kd);
+    
+    
+    Color color = ray.D.dot(N) *  material.color* lights[0]->color * material.kd;
+
+    printf("Color: %lf\n", color.x);
 
     /****************************************************
     * This is where you should insert the color
@@ -51,7 +58,7 @@ Color Scene::trace(Ray const &ray)
     *        pow(a,b)           a to the power of b
     ****************************************************/
 
-    Color color = material.color;                  // place holder
+  
 
     return color;
 }

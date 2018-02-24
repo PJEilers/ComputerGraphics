@@ -6,31 +6,31 @@
 
 #IncludeRegexTransform: 
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/hit.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/hit.h
 triple.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
 limits
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/image.cpp
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/image.cpp
 image.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/image.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/image.h
 lode/lodepng.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.h
 iostream
 -
 fstream
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/image.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/image.h
 triple.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
 string
 -
 vector
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json.h
 algorithm
 -
 cassert
@@ -294,7 +294,7 @@ utility
 utility
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json_fwd.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json_fwd.h
 cstdint
 -
 map
@@ -306,15 +306,15 @@ string
 vector
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/light.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/light.h
 triple.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
 memory
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.cpp
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.cpp
 lodepng.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.h
 limits.h
 -
 stdio.h
@@ -322,7 +322,7 @@ stdio.h
 stdlib.h
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.h
 string.h
 -
 vector
@@ -330,39 +330,39 @@ vector
 string
 -
 lodepng.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.h
 iostream
 -
 lodepng.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/lode/lodepng.h
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/main.cpp
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/main.cpp
 raytracer.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/raytracer.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/raytracer.h
 iostream
 -
 string
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/material.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/material.h
 triple.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/object.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/object.h
 material.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/material.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/material.h
 hit.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/hit.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/hit.h
 ray.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/ray.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/ray.h
 triple.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
 memory
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/objloader.cpp
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/objloader.cpp
 objloader.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/objloader.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/objloader.h
 fstream
 -
 iostream
@@ -370,33 +370,33 @@ iostream
 sstream
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/objloader.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/objloader.h
 vertex.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/vertex.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/vertex.h
 string
 -
 vector
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/ray.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/ray.h
 triple.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/raytracer.cpp
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/raytracer.cpp
 raytracer.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/raytracer.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/raytracer.h
 image.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/image.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/image.h
 light.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/light.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/light.h
 material.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/material.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/material.h
 triple.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
 shapes/sphere.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/sphere.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/sphere.h
 json/json.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json.h
 exception
 -
 fstream
@@ -404,65 +404,65 @@ fstream
 iostream
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/raytracer.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/raytracer.h
 scene.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/scene.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/scene.h
 string
 -
 json/json_fwd.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json_fwd.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json_fwd.h
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/scene.cpp
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/scene.cpp
 scene.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/scene.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/scene.h
 hit.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/hit.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/hit.h
 image.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/image.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/image.h
 material.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/material.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/material.h
 ray.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/ray.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/ray.h
 cmath
 -
 limits
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/scene.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/scene.h
 light.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/light.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/light.h
 object.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/object.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/object.h
 triple.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
 vector
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/example.cpp
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/example.cpp
 example.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/example.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/example.h
 cmath
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/example.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/example.h
 ../object.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/object.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/object.h
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/sphere.cpp
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/sphere.cpp
 sphere.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/sphere.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/sphere.h
 cmath
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/sphere.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/shapes/sphere.h
 ../object.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/object.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/object.h
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.cpp
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.cpp
 triple.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
 json/json.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json.h
 cmath
 -
 exception
@@ -470,11 +470,11 @@ exception
 iostream
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/triple.h
 json/json_fwd.h
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json_fwd.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/json/json_fwd.h
 iosfwd
 -
 
-/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/vertex.h
+/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/Code/vertex.h
 
