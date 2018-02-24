@@ -33,12 +33,12 @@ Color Scene::trace(Ray const &ray)
     Vector N = min_hit.N;                          //the normal at hit point
     Vector V = -ray.D;                             //the view vector
     
-    printf("%lf\n",material.kd);
-    
-    
-    Color color = ray.D.dot(N) *  material.color* lights[0]->color * material.kd;
 
-    printf("Color: %lf\n", color.x);
+    
+    Vector p = ray.O - (ray.D*min_hit.t);
+    p.normalize();
+    Color color = p.dot(N) *  material.color* lights[0]->color * material.kd;
+    
 
     /****************************************************
     * This is where you should insert the color
@@ -59,7 +59,6 @@ Color Scene::trace(Ray const &ray)
     ****************************************************/
 
   
-
     return color;
 }
 

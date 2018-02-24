@@ -62,13 +62,14 @@ Hit Sphere::intersect(Ray const &ray)
     * Insert calculation of the sphere's normal at the intersection point.
     ****************************************************/
 
- 
+
     
-    Vector p = ray.D*t;
-    Vector phit = ray.O + p;
-    Vector N = phit - position;
+    Vector p = ray.O + (ray.D*t);
+    Vector N = p - position;
     
     N.normalize();
+    
+
 
     return Hit(t,N);
 }
