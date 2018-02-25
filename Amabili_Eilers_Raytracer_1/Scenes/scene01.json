@@ -76,6 +76,20 @@
                 "ks": 0.5,
                 "n": 32
             }
+        },
+        {
+            "type": "plane",
+            "comment": "Orange plane",
+            "position": [100, 100, -500],
+            "normal": [0,0,-1],
+            "material":
+            {
+                "color": [1.0, 0.5, 0.0],
+                "ka": 0.2,
+                "kd": 0.8,
+                "ks": 0.5,
+                "n": 8
+            }
         }
     ]
 }

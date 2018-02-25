@@ -10,6 +10,7 @@
 // =============================================================================
 
 #include "shapes/sphere.h"
+#include "shapes/plane.h"
 
 // =============================================================================
 // -- End of shape includes ----------------------------------------------------
@@ -37,6 +38,12 @@ bool Raytracer::parseObjectNode(json const &node)
         Point pos(node["position"]);
         double radius = node["radius"];
         obj = ObjectPtr(new Sphere(pos, radius));
+    }
+    else if (node["type"] == "plane") 
+    {
+        Point pos(node["position"]);
+        Point normal(node["normal"]);
+        obj = ObjectPtr(new Plane(pos, normal));
     }
     else
     {

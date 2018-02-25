@@ -40,10 +40,7 @@ Hit Sphere::intersect(Ray const &ray)
     double t2 = tca + tch;
     
     
-    if (t1 > t2) std::swap(t1,t2);
-
-    
-
+    if (t1 > t2) swap(t1,t2);
     
     if (t1 < 0) {
         t1 = t2;

@@ -28,17 +28,12 @@ Color Scene::trace(Ray const &ray)
     // No hit? Return background color.
     if (!obj) return Color(0.0, 0.0, 0.0);
 
-    Material material = obj->material;          //the hit objects material
+    Material material = obj->material;             //the hit objects material
     Point hit = ray.at(min_hit.t);                 //the hit point
     Vector N = min_hit.N;                          //the normal at hit point
-    Vector V = -ray.D;                             //the view vector
-    
-
-    
-    Vector p = ray.O - (ray.D*min_hit.t);
-    p.normalize();
-    Color color = p.dot(N) *  material.color* lights[0]->color * material.kd;
-    
+    //printf("%lf, %lf, %lf\n", ray.D.x, ray.D.y, ray.D.z);
+    Vector V = -ray.D;                             //View direction 
+    Color color = getLighting(material, hit, N, V);
 
     /****************************************************
     * This is where you should insert the color
@@ -104,4 +99,34 @@ unsigned Scene::getNumObject()
 unsigned Scene::getNumLights()
 {
     return lights.size();
+}
+
+Color Scene::getLighting(Material material, Point hit, Vector N, Vector V) {
+    for(LightPtr &light : lights) {
+        Vector L = light->position - hit; 
+        L.normalize();
+        Vector R = N * 2 * L.dot(N) - L;
+    
+        //Diffuse
+    
+        Color id(0.0,0.0,0.0);
+        double dot = L.dot(N);
+        if(dot > 0)  id = dot *  material.color* light->color * material.kd;
+    
+        //Specular
+    
+        dot = R.dot(V);    
+        Color is(0.0,0.0,0.0);
+        if(dot > 0) is = pow(dot, material.n) * light->color*material.ks;
+    
+        //Ambient
+    
+        Color ia = material.color * material.ka;
+    
+        //Full phong
+    
+        Color color = ia + id + is;
+    }
+    
+    return color;
 }

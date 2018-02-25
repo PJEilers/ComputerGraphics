@@ -4,6 +4,7 @@
 #include "light.h"
 #include "object.h"
 #include "triple.h"
+#include "material.h"
 
 #include <vector>
 
@@ -21,6 +22,7 @@ class Scene
 
         // trace a ray into the scene and return the color
         Color trace(Ray const &ray);
+        Color getLighting(Material material, Point hit, Vector N, Vector V);
 
         // render the scene to the given image
         void render(Image &img);
