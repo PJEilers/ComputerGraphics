@@ -102,6 +102,8 @@ unsigned Scene::getNumLights()
 }
 
 Color Scene::getLighting(Material material, Point hit, Vector N, Vector V) {
+    
+    Color color(0.0, 0.0, 0.0);
     for(LightPtr &light : lights) {
         Vector L = light->position - hit; 
         L.normalize();
@@ -119,14 +121,16 @@ Color Scene::getLighting(Material material, Point hit, Vector N, Vector V) {
         Color is(0.0,0.0,0.0);
         if(dot > 0) is = pow(dot, material.n) * light->color*material.ks;
     
-        //Ambient
-    
-        Color ia = material.color * material.ka;
+        
     
         //Full phong
     
-        Color color = ia + id + is;
+        color = color + id + is;
     }
     
-    return color;
+    //Ambient
+    
+    Color ia = material.color * material.ka;
+    
+    return color+ia;
 }
