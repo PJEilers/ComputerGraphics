@@ -121,9 +121,6 @@ Color Scene::getLighting(Material material, Point hit, Vector N, Vector V) {
         Color is(0.0,0.0,0.0);
         if(dot > 0) is = pow(dot, material.n) * light->color*material.ks;
     
-        
-    
-        //Full phong
     
         color = color + id + is;
     }

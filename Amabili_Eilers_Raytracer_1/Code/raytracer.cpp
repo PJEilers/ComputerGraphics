@@ -4,6 +4,8 @@
 #include "light.h"
 #include "material.h"
 #include "triple.h"
+#include "objloader.h"
+
 
 // =============================================================================
 // -- Include all your shapes here ---------------------------------------------
@@ -11,6 +13,7 @@
 
 #include "shapes/sphere.h"
 #include "shapes/plane.h"
+#include "shapes/triangle.h"
 
 // =============================================================================
 // -- End of shape includes ----------------------------------------------------
@@ -44,6 +47,18 @@ bool Raytracer::parseObjectNode(json const &node)
         Point pos(node["position"]);
         Point normal(node["normal"]);
         obj = ObjectPtr(new Plane(pos, normal));
+    }
+    else if (node["type"] == "triangle")
+    {
+        Point v1(node["point1"]);
+        Point v2(node["point2"]);
+        Point v3(node["point3"]);
+        obj = ObjectPtr(new Triangle(v1, v2, v3));
+    }
+    else if (node["type"] == "mesh") 
+    {
+
+       // OBJLoader objl(node["name"]);    
     }
     else
     {
