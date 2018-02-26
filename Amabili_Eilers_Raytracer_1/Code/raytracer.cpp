@@ -61,9 +61,7 @@ bool Raytracer::parseObjectNode(json const &node)
     }
     else if (node["type"] == "mesh") 
     {   
-        json j = node["name"];
-        //if(j.is_string()); c = j.get_impl_ptr(s.to_string_t);
-       // OBJLoader objl(node["name"]);    
+        return initializeMesh(node);
     }
     else
     {
@@ -149,4 +147,40 @@ void Raytracer::renderToFile(string const &ofname)
     cout << "Writing image to " << ofname << "...\n";
     img.write_png(ofname);
     cout << "Done.\n";
+}
+
+bool Raytracer::initializeMesh (json const &node) {
+    json j = node["name"];
+    string name;
+        
+    if(!j.is_string()) return false;
+            
+    name = j.get<std::string>(); // Get name
+        
+    OBJLoader objl(name); // Load object
+        
+    vector<Vertex> vertices = objl.vertex_data(); //Get vertices of object
+        
+    json scaleAndOffset = node["scaleoffset"]; //Get scaling factor and offset ratios
+        
+    if(!scaleAndOffset.is_array()) return false;
+        
+    double scale = scaleAndOffset[0];
+    double offsetX = scaleAndOffset[1];
+    double offsetY = scaleAndOffset[2];
+    double offsetZ = scaleAndOffset[3];
+        
+    Material material = parseMaterialNode(node["material"]); //Parse material
+        
+    /* Adding all triangles in the mesh to the scene*/
+        
+    for(unsigned int i = 0; i < vertices.size(); i+=3) {            
+        Point v1(vertices[i].x*scale+offsetX, vertices[i].y*scale+offsetY, vertices[i].z*scale+offsetZ);
+        Point v2(vertices[i+1].x*scale+offsetX , vertices[i+1].y*scale+offsetY, vertices[i+1].z*scale+offsetZ);
+        Point v3(vertices[i+2].x*scale+offsetX , vertices[i+2].y*scale+offsetY, vertices[i+2].z*scale+offsetZ);
+        ObjectPtr obj = ObjectPtr(new Triangle(v1,v2,v3));
+        obj->material = material;
+        scene.addObject(obj);
+    }
+    return true;
 }

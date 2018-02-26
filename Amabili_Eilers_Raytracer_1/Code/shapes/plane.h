@@ -10,12 +10,12 @@
 class Plane: public Object
 {
     public:
-        Plane(Point &pos, Point &n);
+        Plane(const Point &pos, const Point &n);
 
         virtual Hit intersect(Ray const &ray);
 
-        Point  position;
-        Point  normal;
+        const Point position;
+        const Point normal;
 };
 
 #endif
