@@ -21,12 +21,12 @@ Hit Plane::intersect(Ray const &ray)
     
     double d = normal.dot(ray.D);
     
-    if(d < 0.000001) return Hit::NO_HIT(); //Ray is (close to) parrallel to the plane
+    if(d < 0.000001) return Hit::NO_HIT(); //Ray is (close to) parallel to the plane
     
     Vector p = position - ray.O;
     double t = p.dot(normal) / d;
     
-    if(t < 0) return Hit::NO_HIT();
+    if(t < 0) return Hit::NO_HIT(); //Ray is behind plane
     
     normal.normalize();
     

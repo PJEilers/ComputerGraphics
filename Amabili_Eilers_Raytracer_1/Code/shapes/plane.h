@@ -3,6 +3,10 @@
 
 #include "../object.h"
 
+/**
+ * Plane is defined by its position and its normal defining the orientation of the plane
+ */
+
 class Plane: public Object
 {
     public:

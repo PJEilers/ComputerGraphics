@@ -21,9 +21,13 @@
 
 #include "json/json.h"
 
+#include <utility> // declval, forward, move, pair, swap
+
 #include <exception>
 #include <fstream>
 #include <iostream>
+
+
 
 using namespace std;        // no std:: required
 using json = nlohmann::json;
@@ -56,8 +60,9 @@ bool Raytracer::parseObjectNode(json const &node)
         obj = ObjectPtr(new Triangle(v1, v2, v3));
     }
     else if (node["type"] == "mesh") 
-    {
-
+    {   
+        json j = node["name"];
+        //if(j.is_string()); c = j.get_impl_ptr(s.to_string_t);
        // OBJLoader objl(node["name"]);    
     }
     else

@@ -3,6 +3,10 @@
 
 #include "../object.h"
 
+/**
+ * A triangle is consists of three points or vertices in 3d space.
+ */
+
 class Triangle: public Object
 {
     public:
@@ -10,7 +14,7 @@ class Triangle: public Object
 
         virtual Hit intersect(Ray const &ray);
 
-        /* My data members*/
+        /* Data members*/
 
         Point const v1;
         Point const v2;

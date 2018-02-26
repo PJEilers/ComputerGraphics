@@ -31,9 +31,9 @@ Color Scene::trace(Ray const &ray)
     Material material = obj->material;             //the hit objects material
     Point hit = ray.at(min_hit.t);                 //the hit point
     Vector N = min_hit.N;                          //the normal at hit point
-    //printf("%lf, %lf, %lf\n", ray.D.x, ray.D.y, ray.D.z);
     Vector V = -ray.D;                             //View direction 
-    Color color = getLighting(material, hit, N, V);
+    
+    Color color = getLighting(material, hit, N, V); //Get full phong lighting
 
     /****************************************************
     * This is where you should insert the color
@@ -101,6 +101,12 @@ unsigned Scene::getNumLights()
     return lights.size();
 }
 
+/**
+ * @brief Calculates full phong lighting
+ * @param Material of the shape, point of intersection, normal vector, view vector
+ * @returns The color of the pixel the be drawn
+ */
+
 Color Scene::getLighting(Material material, Point hit, Vector N, Vector V) {
     
     Color color(0.0, 0.0, 0.0);
@@ -113,14 +119,13 @@ Color Scene::getLighting(Material material, Point hit, Vector N, Vector V) {
     
         Color id(0.0,0.0,0.0);
         double dot = L.dot(N);
-        if(dot > 0)  id = dot *  material.color* light->color * material.kd;
+        if(dot > 0) id = dot *  material.color* light->color * material.kd;
     
         //Specular
     
         dot = R.dot(V);    
         Color is(0.0,0.0,0.0);
         if(dot > 0) is = pow(dot, material.n) * light->color*material.ks;
-    
     
         color = color + id + is;
     }

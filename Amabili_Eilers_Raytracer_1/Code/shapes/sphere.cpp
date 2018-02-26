@@ -22,8 +22,6 @@ Hit Sphere::intersect(Ray const &ray)
     * intersection point from the ray origin in *t (see example).
     ****************************************************/
 
-    // place holder for actual intersection calculation
-
     Vector OC = (position - ray.O);
     double tca = OC.dot(ray.D);
     if (tca < 0) {
@@ -35,16 +33,17 @@ Hit Sphere::intersect(Ray const &ray)
     if(d > r) {
         return Hit::NO_HIT();
     }
+    
     double tch = sqrt(r*r -d*d);
     double t1 = tca-tch;
     double t2 = tca + tch;
     
     
-    if (t1 > t2) swap(t1,t2);
+    if (t1 > t2) swap(t1,t2); //Smallest t is closest intersection
     
     if (t1 < 0) {
         t1 = t2;
-        if (t1 < 0) return Hit::NO_HIT(); 
+        if (t1 < 0) return Hit::NO_HIT(); //Both intersections are negative
     }
 
     double t = t1;
@@ -58,15 +57,11 @@ Hit Sphere::intersect(Ray const &ray)
     *
     * Insert calculation of the sphere's normal at the intersection point.
     ****************************************************/
-
-
     
-    Vector p = ray.O + (ray.D*t);
+    Vector p = ray.at(t); //Point of intersection
     Vector N = p - position;
     
     N.normalize();
-    
-
 
     return Hit(t,N);
 }
