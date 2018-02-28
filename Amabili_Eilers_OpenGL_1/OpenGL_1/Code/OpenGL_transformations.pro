@@ -17,12 +17,13 @@ SOURCES += main.cpp\
     mainview.cpp \
     user_input.cpp \
     model.cpp \
-    mainviewalt.cpp
+    transformations.cpp
 
 HEADERS  += mainwindow.h \
     mainview.h \
     model.h \
-    vertex.h
+    vertex.h \
+    transformations.h
 
 FORMS    += mainwindow.ui
 

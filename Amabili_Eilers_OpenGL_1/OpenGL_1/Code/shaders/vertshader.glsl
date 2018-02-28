@@ -12,7 +12,6 @@ layout (location = 1) in vec3 vertColor_in;
 
 uniform mat4 modelTransform;
 uniform mat4 projectTransform;
-uniform mat4 scaleTransform;
 
 // Specify the output of the vertex stage
 out vec3 vertColor;
@@ -22,7 +21,7 @@ void main()
     // gl_Position is the output (a vec4) of the vertex shader
     // Currently without any transformation
     //gl_Position = vec4(vertCoordinates_in, 1.0);
-    gl_Position =   scaleTransform * projectTransform *  modelTransform  * vec4(vertCoordinates_in, 1.0);
+    gl_Position =  projectTransform *  modelTransform  * vec4(vertCoordinates_in, 1.0);
 
     vertColor = vertColor_in;
 }

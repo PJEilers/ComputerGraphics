@@ -69,7 +69,7 @@ void MainView::initializeGL() {
     glEnable(GL_DEPTH_TEST);
 
     // Enable backface culling
-    // glEnable(GL_CULL_FACE);
+     glEnable(GL_CULL_FACE);
 
     // Default is GL_LESS
     glDepthFunc(GL_LEQUAL);
@@ -79,125 +79,16 @@ void MainView::initializeGL() {
 
     createShaderProgram();
 
-    //Creating cube
-
-    vertex cube [36] = {
-
-        //Front
-
-        {1,1,1,0,0,1},
-        {-1,-1,1,0,1,0},
-        {1,-1,1,1,0,0},
-
-        {-1,-1,1,0,1,0},
-        {1,1,1,0,0,1},
-        {-1,1,1,1,0,0},
-
-        //Back
-
-        {-1,-1,-1,1,0,0},
-        {1,-1,-1,0,1,0},
-        {1,1,-1,0,0,1},
-
-        {-1,-1,-1,1,0,0},
-        {1,1,-1,0,0,1},
-        {-1,1,-1,0,1,0},
-
-        //Top
-
-        {-1,1,1,1,0,0},
-        {1,1,-1,0,0,1},
-        {1,1,1,0,1,0},
-
-        {1,1,-1,0,0,1},
-        {-1,1,1,1,0,0},
-        {-1,1,-1,0,1,0},
-
-        //Right
-
-        {1,1,-1,0,0,1},
-        {1,-1,1,1,0,0},
-        {1,-1,-1,0,1,0},
-
-        {1,-1,1,1,0,0},
-        {1,1,-1,0,0,1},
-        {1,1,1,0,1,0},
-
-        //Left
-
-        {-1,-1,1,1,0,0},
-        {-1,-1,-1,0,1,0},
-        {-1,1,-1,0,0,1},
-
-        {-1,-1,1,1,0,0},
-        {-1,1,-1,0,0,1},
-        {-1,1,1,0,1,0},
-
-        //Bottom
-
-        {-1,-1,1,1,0,0},
-        {1,-1,1,0,1,0},
-        {1,-1,-1,0,0,1},
-
-        {-1,-1,1,1,0,0},
-        {1,-1,-1,0,0,1},
-        {-1,-1,-1,0,1,0},
-
-    };
-
-    //Creating pyramid
-
-    vertex pyramid[18] = {
-
-        //Bottom
-        {-1,-1,1,1,0,0},
-        {1,-1,1,0,1,0},
-        {1,-1,-1,0,0,1},
-
-        {-1,-1,1,1,0,0},
-        {1,-1,-1,0,0,1},
-        {-1,-1,-1,0,1,0},
-
-        //Back
-        {-1,-1,1,1,0,0},
-        {1,-1,1,0,1,0},
-        {0,1,0,0,0,1},
-
-        //Front
-        {-1,-1,-1,1,0,0},
-        {1,-1,-1,0,1,0},
-        {0,1,0,0,0,1},
-
-        //Right
-        {1,-1,1,1,0,0},
-        {1,-1,-1,0,1,0},
-        {0,1,0,0,0,1},
-
-        //Left
-        {-1,-1,-1,0,1,0},
-        {-1,-1,1,1,0,0},
-        {0,1,0,0,0,1},
-    };
-
-    vertex * mesh;
-    mesh = loadModel(":/models/sphere.obj", mesh);
-
-    //Transformations
-
-    cubeModel.translate(QVector3D(-2,0,-6));
-    pyramidModel.translate(QVector3D(2,0,-6));
-    meshModel.translate(QVector3D(0,0,-10));
-    meshModel.scale(6);
-    projection.perspective(60, 1.4, 1, 50);
+    projection.perspective(60, 1.4, 1, 100);
 
     //Initializing cube
-    initializeCube(cube);
+    initializeCube();
 
     //Initializing pyramid
-    initializePyramid(pyramid);
+    initializePyramid();
 
     //Initializing mesh
-    initializeMesh(mesh);
+    initializeMesh(":/models/sphere.obj");
 
 }
 
@@ -236,25 +127,50 @@ void MainView::paintGL() {
 
 
     //Applying transformations
+    QMatrix4x4 cubeT;
+    QMatrix4x4 pyramidT;
+    QMatrix4x4 meshT;
+
+    cubeT.translate(cubeTransformations.translateX, cubeTransformations.translateY, cubeTransformations.translateZ);
+    pyramidT.translate(pyramidTransformations.translateX, pyramidTransformations.translateY, pyramidTransformations.translateZ);
+    meshT.translate(meshTransformations.translateX, meshTransformations.translateY, meshTransformations.translateZ);
+
+    cubeT.rotate(cubeTransformations.rotateX, 1,0,0);
+    cubeT.rotate(cubeTransformations.rotateY, 0,1,0);
+    cubeT.rotate(cubeTransformations.rotateZ, 0,0,1);
+
+    pyramidT.rotate(pyramidTransformations.rotateX, 1,0,0);
+    pyramidT.rotate(pyramidTransformations.rotateY, 0,1,0);
+    pyramidT.rotate(pyramidTransformations.rotateZ, 0,0,1);
+
+    meshT.rotate(meshTransformations.rotateX, 1,0,0);
+    meshT.rotate(meshTransformations.rotateY, 0,1,0);
+    meshT.rotate(meshTransformations.rotateZ, 0,0,1);
+
+    cubeT.scale(cubeTransformations.scale);
+    pyramidT.scale(pyramidTransformations.scale);
+    meshT.scale(meshTransformations.scale);
 
     shaderProgram.bind();
 
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection.data());
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, cubeModel.data());
-    glUniformMatrix4fv(scaleLoc, 1, GL_FALSE, scaling.data());
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, cubeT.data());
 
-    // Drawing objects
+
+   // Drawing objects
 
     glBindVertexArray(*vaoCube);
     glDrawArrays(GL_TRIANGLES, 0,36);
 
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, pyramidModel.data());
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, pyramidT.data());
+
     glBindVertexArray(*vaoPyramid);
     glDrawArrays(GL_TRIANGLES, 0,18);
 
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, meshModel.data());
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, meshT.data());
     glBindVertexArray(*vaoMesh);
-    glDrawArrays(GL_TRIANGLES, 0,meshSize);
+    glDrawArrays(GL_TRIANGLES, 0, meshSize);
+
 
 
 
@@ -289,31 +205,11 @@ void MainView::resizeGL(int newWidth, int newHeight)
 
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 {
-    cubeModel.setToIdentity();
-    pyramidModel.setToIdentity();
-    meshModel.setToIdentity();
-    cubeModel.translate(QVector3D(-2,0,-6));
-    pyramidModel.translate(QVector3D(2,0,-6));
-    meshModel.translate(QVector3D(0,0,-10));
-    meshModel.scale(6);
 
-    //Rotating the cube around the x,y and z axis
+    setRotate(rotateX, rotateY, rotateZ, cubeTransformations);
+    setRotate(rotateX, rotateY, rotateZ, pyramidTransformations);
+    setRotate(rotateX, rotateY, rotateZ, meshTransformations);
 
-    cubeModel.rotate(rotateX, 1 , 0, 0);
-    cubeModel.rotate(rotateY, 0 , 1, 0);
-    cubeModel.rotate(rotateZ, 0 , 0, 1);
-
-    //Rotating the pyramid around the x,y and z axis
-
-    pyramidModel.rotate(rotateX, 1 , 0, 0);
-    pyramidModel.rotate(rotateY, 0 , 1, 0);
-    pyramidModel.rotate(rotateZ, 0 , 0, 1);
-
-    //Rotating the mesh around the x,y and z axis
-
-    meshModel.rotate(rotateX, 1 , 0, 0);
-    meshModel.rotate(rotateY, 0 , 1, 0);
-    meshModel.rotate(rotateZ, 0 , 0, 1);
 
     qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << "," << rotateZ << ")";
     update();
@@ -332,8 +228,9 @@ void MainView::setScale(int scale)
 {
     float s = (float) scale/100;
     qDebug() << "Scale changed to " << s;
-    scaling.setToIdentity();
-    scaling.scale(s);
+    cubeTransformations.scale = s;
+    pyramidTransformations.scale = s;
+    meshTransformations.scale = 6*s;
     update();
 
 }
@@ -363,11 +260,78 @@ void MainView::onMessageLogged( QOpenGLDebugMessage Message ) {
  * initialize the cube vbo and vao
  */
 
-void MainView::initializeCube (vertex * cube) {
-    glGenBuffers(12, vboCube);
+void MainView::initializeCube () {
+
+    //Creating cube
+
+    vertex cube [36] = {
+
+        //Front
+
+        {1,1,1,0,0,1},
+        {-1,-1,1,0,1,0},
+        {1,-1,1,1,0,0},
+
+        {-1,-1,1,0,1,0},
+        {1,1,1,0,0,1},
+        {-1,1,1,1,0,0},
+
+        //Back
+
+        {1,-1,-1,0,1,0},
+        {-1,-1,-1,1,0,0},  
+        {1,1,-1,0,0,1},
+
+        {1,1,-1,0,0,1},
+        {-1,-1,-1,1,0,0},
+        {-1,1,-1,0,1,0},
+
+        //Top
+
+        {1,1,-1,0,0,1},
+        {-1,1,1,1,0,0},
+        {1,1,1,0,1,0},
+
+        {1,1,-1,0,0,1},  
+        {-1,1,-1,0,1,0},
+        {-1,1,1,1,0,0},
+
+        //Right
+
+        {1,1,-1,0,0,1},
+        {1,-1,1,1,0,0},
+        {1,-1,-1,0,1,0},
+
+        {1,-1,1,1,0,0},
+        {1,1,-1,0,0,1},
+        {1,1,1,0,1,0},
+
+        //Left
+
+        {-1,-1,1,1,0,0},
+        {-1,1,-1,0,0,1},
+        {-1,-1,-1,0,1,0},
+
+        {-1,1,-1,0,0,1},
+        {-1,-1,1,1,0,0},      
+        {-1,1,1,0,1,0},
+
+        //Bottom
+
+        {1,-1,1,0,1,0},
+        {-1,-1,1,1,0,0},
+        {1,-1,-1,0,0,1},
+
+        {1,-1,-1,0,0,1},
+        {-1,-1,1,1,0,0},      
+        {-1,-1,-1,0,1,0},
+
+    };
+
+    glGenBuffers(1, vboCube);
     glBindBuffer(GL_ARRAY_BUFFER, *vboCube);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*36, cube, GL_STATIC_DRAW);
-    glGenVertexArrays(12, vaoCube);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*36, &cube[0].x, GL_STATIC_DRAW);
+    glGenVertexArrays(1, vaoCube);
     glBindVertexArray(*vaoCube);
 
 
@@ -376,6 +340,12 @@ void MainView::initializeCube (vertex * cube) {
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(0));
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(12));
+
+    setTranslation(2,0,-6, cubeTransformations);
+    setRotate(0,0,0,cubeTransformations);
+    cubeTransformations.scale = 1;
+
+
 }
 
 /**
@@ -384,11 +354,46 @@ void MainView::initializeCube (vertex * cube) {
  * initialize the pyramid vbo and vao
  */
 
-void MainView::initializePyramid (vertex * pyramid) {
-    glGenBuffers(6, vboPyramid);
+void MainView::initializePyramid () {
+
+    //Creating pyramid
+
+    vertex pyramid[18] = {
+
+        //Bottom
+        {1,-1,1,0,1,0},
+        {-1,-1,1,1,0,0},  
+        {1,-1,-1,0,0,1},
+
+        {1,-1,-1,0,0,1},
+        {-1,-1,1,1,0,0},       
+        {-1,-1,-1,0,1,0},
+
+        //Front
+        {-1,-1,1,1,0,0},
+        {1,-1,1,0,1,0},
+        {0,1,0,0,0,1},
+
+        //Back
+        {1,-1,-1,0,1,0},
+        {-1,-1,-1,1,0,0},       
+        {0,1,0,0,0,1},
+
+        //Right
+        {1,-1,1,1,0,0},
+        {1,-1,-1,0,1,0},
+        {0,1,0,0,0,1},
+
+        //Left
+        {-1,-1,-1,0,1,0},
+        {-1,-1,1,1,0,0},
+        {0,1,0,0,0,1},
+    };
+
+    glGenBuffers(1, vboPyramid);
     glBindBuffer(GL_ARRAY_BUFFER, *vboPyramid);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*18, pyramid, GL_STATIC_DRAW);
-    glGenVertexArrays(6, vaoPyramid);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*18, &pyramid[0].x, GL_STATIC_DRAW);
+    glGenVertexArrays(1, vaoPyramid);
     glBindVertexArray(*vaoPyramid);
 
     glEnableVertexAttribArray(0);
@@ -396,6 +401,10 @@ void MainView::initializePyramid (vertex * pyramid) {
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(0));
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(12));
+
+    setTranslation(-2,0,-6, pyramidTransformations);
+    setRotate(0,0,0,pyramidTransformations);
+    pyramidTransformations.scale = 1;
 }
 
 /**
@@ -404,39 +413,12 @@ void MainView::initializePyramid (vertex * pyramid) {
  * initialize the mesh vbo and vao
  */
 
-void MainView::initializeMesh(vertex * mesh) {
-    glGenBuffers(meshSize/3, vboMesh);
-    glBindBuffer(GL_ARRAY_BUFFER, *vboMesh);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*meshSize, mesh, GL_STATIC_DRAW);
-    glGenVertexArrays(meshSize/3, vaoMesh);
-    glBindVertexArray(*vaoMesh);
+void MainView::initializeMesh(QString name) {
+    Model m(name);
 
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    QVector<QVector3D> meshVertices = m.getVertices();
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(0));
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(12));
-}
-
-/**
- * @brief MainView::loadModel
- *
- * loading in a model and filling an array of vertices.
- *
- * @param name
- * @param mesh
- * @return the array of vertices for the mesh
- */
-
-vertex * MainView::loadModel(QString name, vertex * mesh) {
-    Model sph(name);
-
-    QVector<QVector3D> meshVertices = sph.getVertices();
-
-    mesh = new vertex[meshVertices.size()];
-
-    vaoMesh = new GLuint[meshVertices.size()/3];
-    vboMesh = new GLuint[meshVertices.size()/3];
+    vertex mesh[meshVertices.size()];
 
     meshSize = meshVertices.size();
 
@@ -448,5 +430,26 @@ vertex * MainView::loadModel(QString name, vertex * mesh) {
         mesh[i].g = (float)rand() / RAND_MAX;
         mesh[i].b = (float)rand() / RAND_MAX;
     }
-    return mesh;
+
+    vaoMesh = new GLuint[meshVertices.size()/3];
+    vboMesh = new GLuint[meshVertices.size()/3];
+
+    glGenBuffers(1, vboMesh);
+    glBindBuffer(GL_ARRAY_BUFFER, *vboMesh);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex)*meshSize, &mesh[0].x, GL_STATIC_DRAW);
+    glGenVertexArrays(1, vaoMesh);
+    glBindVertexArray(*vaoMesh);
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(0));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), BUFFER_OFFSET(12));
+
+    setTranslation(0,0,-10, meshTransformations);
+    setRotate(0,0,0,meshTransformations);
+    meshTransformations.scale = 6;
+
 }
+

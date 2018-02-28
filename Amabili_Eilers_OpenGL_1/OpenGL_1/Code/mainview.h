@@ -3,6 +3,7 @@
 
 #include "model.h"
 #include "vertex.h"
+#include "transformations.h"
 
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -41,11 +42,12 @@ public:
 
     int meshSize;
 
-    QMatrix4x4 cubeModel;
-    QMatrix4x4 pyramidModel;
-    QMatrix4x4 meshModel;
+    transformations cubeTransformations;
+    transformations pyramidTransformations;
+    transformations meshTransformations;
+
     QMatrix4x4 projection;
-    QMatrix4x4 scaling;
+
 
     MainView(QWidget *parent = 0);
     ~MainView();
@@ -70,9 +72,9 @@ protected:
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *evs);
     void wheelEvent(QWheelEvent *ev);
-    void initializeCube(vertex* cube);
-    void initializePyramid(vertex*pyramid);
-    void initializeMesh(vertex*sphere);
+    void initializeCube();
+    void initializePyramid();
+    void initializeMesh(QString name);
     vertex *  loadModel(QString name, vertex *mesh);
 private slots:
     void onMessageLogged( QOpenGLDebugMessage Message );
