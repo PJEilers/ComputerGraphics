@@ -48,18 +48,18 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1
+CMAKE_SOURCE_DIR = /home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/build
+CMAKE_BINARY_DIR = /home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/build
 
 #=============================================================================
 # Targets provided globally by CMake.
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/ccmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/build/CMakeFiles /home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/build/CMakeFiles /home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -312,6 +312,33 @@ Code/shapes/example.cpp.s:
 	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/example.cpp.s
 .PHONY : Code/shapes/example.cpp.s
 
+Code/shapes/plane.o: Code/shapes/plane.cpp.o
+
+.PHONY : Code/shapes/plane.o
+
+# target to build an object file
+Code/shapes/plane.cpp.o:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/plane.cpp.o
+.PHONY : Code/shapes/plane.cpp.o
+
+Code/shapes/plane.i: Code/shapes/plane.cpp.i
+
+.PHONY : Code/shapes/plane.i
+
+# target to preprocess a source file
+Code/shapes/plane.cpp.i:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/plane.cpp.i
+.PHONY : Code/shapes/plane.cpp.i
+
+Code/shapes/plane.s: Code/shapes/plane.cpp.s
+
+.PHONY : Code/shapes/plane.s
+
+# target to generate assembly for a file
+Code/shapes/plane.cpp.s:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/plane.cpp.s
+.PHONY : Code/shapes/plane.cpp.s
+
 Code/shapes/sphere.o: Code/shapes/sphere.cpp.o
 
 .PHONY : Code/shapes/sphere.o
@@ -338,6 +365,33 @@ Code/shapes/sphere.s: Code/shapes/sphere.cpp.s
 Code/shapes/sphere.cpp.s:
 	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/sphere.cpp.s
 .PHONY : Code/shapes/sphere.cpp.s
+
+Code/shapes/triangle.o: Code/shapes/triangle.cpp.o
+
+.PHONY : Code/shapes/triangle.o
+
+# target to build an object file
+Code/shapes/triangle.cpp.o:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/triangle.cpp.o
+.PHONY : Code/shapes/triangle.cpp.o
+
+Code/shapes/triangle.i: Code/shapes/triangle.cpp.i
+
+.PHONY : Code/shapes/triangle.i
+
+# target to preprocess a source file
+Code/shapes/triangle.cpp.i:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/triangle.cpp.i
+.PHONY : Code/shapes/triangle.cpp.i
+
+Code/shapes/triangle.s: Code/shapes/triangle.cpp.s
+
+.PHONY : Code/shapes/triangle.s
+
+# target to generate assembly for a file
+Code/shapes/triangle.cpp.s:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/triangle.cpp.s
+.PHONY : Code/shapes/triangle.cpp.s
 
 Code/triple.o: Code/triple.cpp.o
 
@@ -396,9 +450,15 @@ help:
 	@echo "... Code/shapes/example.o"
 	@echo "... Code/shapes/example.i"
 	@echo "... Code/shapes/example.s"
+	@echo "... Code/shapes/plane.o"
+	@echo "... Code/shapes/plane.i"
+	@echo "... Code/shapes/plane.s"
 	@echo "... Code/shapes/sphere.o"
 	@echo "... Code/shapes/sphere.i"
 	@echo "... Code/shapes/sphere.s"
+	@echo "... Code/shapes/triangle.o"
+	@echo "... Code/shapes/triangle.i"
+	@echo "... Code/shapes/triangle.s"
 	@echo "... Code/triple.o"
 	@echo "... Code/triple.i"
 	@echo "... Code/triple.s"

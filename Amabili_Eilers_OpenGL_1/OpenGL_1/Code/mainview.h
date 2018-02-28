@@ -21,13 +21,17 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QOpenGLDebugLogger *debugLogger;
     QTimer timer; // timer used for animation
 
-    QOpenGLShaderProgram shaderProgram;
+    QOpenGLShaderProgram shaderProgramNormal;
+    QOpenGLShaderProgram shaderProgramPhong;
+    QOpenGLShaderProgram shaderProgramGouraud;
 
 public:
     enum ShadingMode : GLuint
     {
         PHONG = 0, NORMAL, GOURAUD
     };
+
+    ShadingMode currentShading = PHONG;
 
     GLuint vboCube[12];
     GLuint vaoCube[12];
@@ -38,7 +42,7 @@ public:
     GLuint programId;
     GLint modelLoc;
     GLint projectionLoc;
-    GLint scaleLoc;
+    GLint normalLoc;
 
     int meshSize;
 
@@ -74,7 +78,7 @@ protected:
     void wheelEvent(QWheelEvent *ev);
     void initializeCube();
     void initializePyramid();
-    void initializeMesh(QString name);
+    void initializeMesh(QString name, int scale);
     vertex *  loadModel(QString name, vertex *mesh);
 private slots:
     void onMessageLogged( QOpenGLDebugMessage Message );

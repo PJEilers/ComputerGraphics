@@ -7,9 +7,9 @@ struct vertex {
     float x;
     float y;
     float z;
-    float r;
-    float g;
-    float b;
+    float n1;
+    float n2;
+    float n3;
 };
 
 

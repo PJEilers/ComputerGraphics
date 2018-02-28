@@ -332,8 +332,12 @@ compiler_rcc_make_all: qrc_resources.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_resources.cpp
 qrc_resources.cpp: ../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/resources.qrc \
-		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/shaders/fragshader.glsl \
-		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/shaders/vertshader.glsl \
+		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/shaders/fragshader_normal.glsl \
+		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/shaders/vertshader_normal.glsl \
+		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/shaders/fragshader_gouraud.glsl \
+		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/shaders/vertshader_phong.glsl \
+		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/shaders/fragshader_phong.glsl \
+		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/shaders/vertshader_gouraud.glsl \
 		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/models/flat_surface.obj \
 		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/models/cube.obj \
 		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/models/cat.obj \
@@ -382,7 +386,11 @@ main.o: ../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/main.cpp ../../../Amabili
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/main.cpp
 
 mainwindow.o: ../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/mainwindow.cpp ../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/mainwindow.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/mainview.h \
+		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/model.h \
+		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/vertex.h \
+		../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/transformations.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/mainwindow.cpp
 
 mainview.o: ../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/mainview.cpp ../../../Amabili_Eilers_OpenGL_1/OpenGL_1/Code/mainview.h \

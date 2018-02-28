@@ -88,20 +88,30 @@ void MainView::initializeGL() {
     initializePyramid();
 
     //Initializing mesh
-    initializeMesh(":/models/sphere.obj");
+    initializeMesh(":/models/cat.obj", 600);
 
 }
 
 void MainView::createShaderProgram()
 {
     // Create shader program
-    shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex,
-                                          ":/shaders/vertshader.glsl");
-    shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment,
-                                          ":/shaders/fragshader.glsl");
-    shaderProgram.link();
+    shaderProgramNormal.addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                          ":/shaders/vertshader_normal.glsl");
+    shaderProgramNormal.addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                          ":/shaders/fragshader_normal.glsl");
 
-    programId = shaderProgram.programId();
+    shaderProgramGouraud.addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                          ":/shaders/vertshader_gouraud.glsl");
+    shaderProgramGouraud.addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                          ":/shaders/fragshader_gouraud.glsl");
+
+    shaderProgramPhong.addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                          ":/shaders/vertshader_phong.glsl");
+    shaderProgramPhong.addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                          ":/shaders/fragshader_phong.glsl");
+    shaderProgramPhong.link();
+
+    programId = shaderProgramPhong.programId();
 
     glUseProgram(programId);
 
@@ -109,7 +119,7 @@ void MainView::createShaderProgram()
 
     modelLoc = glGetUniformLocation(programId, "modelTransform");
     projectionLoc = glGetUniformLocation(programId, "projectTransform");
-    scaleLoc = glGetUniformLocation(programId, "scaleTransform");
+    normalLoc = glGetUniformLocation(programId, "normalMatrix");
 
 }
 
@@ -126,14 +136,19 @@ void MainView::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-    //Applying transformations
+
     QMatrix4x4 cubeT;
     QMatrix4x4 pyramidT;
     QMatrix4x4 meshT;
+    QMatrix4x4 lightT;
+
+
+    //Applying transformations
 
     cubeT.translate(cubeTransformations.translateX, cubeTransformations.translateY, cubeTransformations.translateZ);
     pyramidT.translate(pyramidTransformations.translateX, pyramidTransformations.translateY, pyramidTransformations.translateZ);
     meshT.translate(meshTransformations.translateX, meshTransformations.translateY, meshTransformations.translateZ);
+    lightT.translate(meshTransformations.translateX, meshTransformations.translateY, meshTransformations.translateZ);
 
     cubeT.rotate(cubeTransformations.rotateX, 1,0,0);
     cubeT.rotate(cubeTransformations.rotateY, 0,1,0);
@@ -145,27 +160,45 @@ void MainView::paintGL() {
 
     meshT.rotate(meshTransformations.rotateX, 1,0,0);
     meshT.rotate(meshTransformations.rotateY, 0,1,0);
-    meshT.rotate(meshTransformations.rotateZ, 0,0,1);
+    meshT.rotate(meshTransformations.rotateZ, 0,0,1);\
+
+    lightT.rotate(meshTransformations.rotateX, 1,0,0);
+    lightT.rotate(meshTransformations.rotateY, 0,1,0);
+    lightT.rotate(meshTransformations.rotateZ, 0,0,1);
+    lightT.translate(10, 10, -10);
+
+    QVector3D lightPos= lightT.map(QVector3D(1,1,1));
 
     cubeT.scale(cubeTransformations.scale);
     pyramidT.scale(pyramidTransformations.scale);
     meshT.scale(meshTransformations.scale);
 
-    shaderProgram.bind();
+    QMatrix3x3 normalMatrix = meshT.normalMatrix();
+
+    if(currentShading == PHONG) {
+        shaderProgramPhong.bind();
+    } else if (currentShading == GOURAUD) {
+        shaderProgramGouraud.bind();
+        glUniform3fv(lightLoc, lightPos.size(), lightPos.data());
+    } else {
+        shaderProgramNormal.bind();
+    }
+
 
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection.data());
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, cubeT.data());
+    glUniformMatrix3fv(normalLoc, 1, GL_FALSE, normalMatrix.data());
 
 
    // Drawing objects
 
-    glBindVertexArray(*vaoCube);
-    glDrawArrays(GL_TRIANGLES, 0,36);
+//    glBindVertexArray(*vaoCube);
+//    glDrawArrays(GL_TRIANGLES, 0,36);
 
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, pyramidT.data());
+//    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, pyramidT.data());
 
-    glBindVertexArray(*vaoPyramid);
-    glDrawArrays(GL_TRIANGLES, 0,18);
+//    glBindVertexArray(*vaoPyramid);
+//    glDrawArrays(GL_TRIANGLES, 0,18);
 
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, meshT.data());
     glBindVertexArray(*vaoMesh);
@@ -174,7 +207,7 @@ void MainView::paintGL() {
 
 
 
-    shaderProgram.release();
+    shaderProgramNormal.release();
 }
 
 /**
@@ -230,15 +263,55 @@ void MainView::setScale(int scale)
     qDebug() << "Scale changed to " << s;
     cubeTransformations.scale = s;
     pyramidTransformations.scale = s;
-    meshTransformations.scale = 6*s;
+    meshTransformations.scale = 600*s;
     update();
 
 }
 
 void MainView::setShadingMode(ShadingMode shading)
 {
+    if(shading == PHONG) {
+        shaderProgramPhong.link();
+        programId = shaderProgramPhong.programId();
+
+        glUseProgram(programId);
+
+        //Getting locations of uniforms in the vertshader file
+
+        modelLoc = glGetUniformLocation(programId, "modelTransform");
+        projectionLoc = glGetUniformLocation(programId, "projectTransform");
+        normalLoc = glGetUniformLocation(programId, "normalMatrix");
+    } else if(shading == GOURAUD) {
+
+        shaderProgramGouraud.link();
+        programId = shaderProgramGouraud.programId();
+
+        glUseProgram(programId);
+
+        //Getting locations of uniforms in the vertshader file
+
+        modelLoc = glGetUniformLocation(programId, "modelTransform");
+        projectionLoc = glGetUniformLocation(programId, "projectTransform");
+        normalLoc = glGetUniformLocation(programId, "normalMatrix");
+
+    } else {
+        shaderProgramNormal.link();
+        programId = shaderProgramNormal.programId();
+
+        glUseProgram(programId);
+
+        //Getting locations of uniforms in the vertshader file
+
+        modelLoc = glGetUniformLocation(programId, "modelTransform");
+        projectionLoc = glGetUniformLocation(programId, "projectTransform");
+        normalLoc = glGetUniformLocation(programId, "normalMatrix");
+    }
+    currentShading = shading;
+
+
     qDebug() << "Changed shading to" << shading;
-    Q_UNIMPLEMENTED();
+
+
 }
 
 // --- Private helpers
@@ -413,12 +486,14 @@ void MainView::initializePyramid () {
  * initialize the mesh vbo and vao
  */
 
-void MainView::initializeMesh(QString name) {
+void MainView::initializeMesh(QString name, int scale) {
     Model m(name);
 
     QVector<QVector3D> meshVertices = m.getVertices();
 
     vertex mesh[meshVertices.size()];
+
+    QVector<QVector3D> meshNormals = m.getNormals();
 
     meshSize = meshVertices.size();
 
@@ -426,9 +501,9 @@ void MainView::initializeMesh(QString name) {
         mesh[i].x = meshVertices[i].x()/180;
         mesh[i].y = meshVertices[i].y()/180;
         mesh[i].z = meshVertices[i].z()/180;
-        mesh[i].r = (float)rand() / RAND_MAX;
-        mesh[i].g = (float)rand() / RAND_MAX;
-        mesh[i].b = (float)rand() / RAND_MAX;
+        mesh[i].n1 = meshNormals[i].x();
+        mesh[i].n2 = meshNormals[i].y();
+        mesh[i].n3 = meshNormals[i].z();
     }
 
     vaoMesh = new GLuint[meshVertices.size()/3];
@@ -449,7 +524,7 @@ void MainView::initializeMesh(QString name) {
 
     setTranslation(0,0,-10, meshTransformations);
     setRotate(0,0,0,meshTransformations);
-    meshTransformations.scale = 6;
+    meshTransformations.scale = scale;
 
 }
 

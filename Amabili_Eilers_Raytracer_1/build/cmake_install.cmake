@@ -1,4 +1,4 @@
-# Install script for directory: /home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1
+# Install script for directory: /home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/pj/Documents/ComputerGraphics/ComputerGraphics/Amabili_Eilers_Raytracer_1/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/s2381575/Documents/ComputerGraphics/Amabili_Eilers_Raytracer_1/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

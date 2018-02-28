@@ -16,8 +16,4 @@ void setScale(float s, transformations &t) {
     t.scale = s;
 }
 
-void reset(transformations &t) {
-    t.rotateX = 0;
-    t.rotateY = 0;
-    t.rotateZ = 0;
-}
+
