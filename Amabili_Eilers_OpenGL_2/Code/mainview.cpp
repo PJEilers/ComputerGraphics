@@ -105,6 +105,9 @@ void MainView::createShaderProgram()
     uniformModelViewTransformGouraud = shaderProgramGouraud.uniformLocation("modelViewTransform");
     uniformProjectionTransformGouraud = shaderProgramGouraud.uniformLocation("projectionTransform");
     uniformNormalMatrixGouraud = shaderProgramGouraud.uniformLocation("normalMatrix");
+    uniformLightPositionGouraud = shaderProgramGouraud.uniformLocation("lightPosition");
+    uniformMaterialColorGouraud = shaderProgramGouraud.uniformLocation("materialColor");
+    uniformMaterialStatsGouraud = shaderProgramGouraud.uniformLocation("materialStats");
 
     shaderProgramNormal.link();
 
@@ -176,6 +179,11 @@ void MainView::paintGL() {
 
 
     QMatrix3x3 normalMatrix = meshTransform.normalMatrix();
+    QVector3D lightPosition(10,10,10);
+    lightPosition = lightTransform * lightPosition;
+    QVector3D materialColor(0.75,0.75,0.75);
+    QVector4D materialStats(0.2,0.7,0.5,8.0);
+
 
     if(currentShading == PHONG) {
         shaderProgramPhong.bind();
@@ -194,6 +202,9 @@ void MainView::paintGL() {
         glUniformMatrix4fv(uniformProjectionTransformGouraud, 1, GL_FALSE, projectionTransform.data());
         glUniformMatrix4fv(uniformModelViewTransformGouraud, 1, GL_FALSE, meshTransform.data());
         glUniformMatrix3fv(uniformNormalMatrixGouraud, 1 , GL_FALSE, normalMatrix.data());
+        glUniform3f(uniformLightPositionGouraud, lightPosition.x(), lightPosition.y(), lightPosition.z());
+        glUniform3f(uniformMaterialColorGouraud, materialColor.x(), materialColor.y(), materialColor.z());
+        glUniform4f(uniformMaterialStatsGouraud, materialStats.x(), materialStats.y(), materialStats.z(), materialStats.w());
 
         glBindVertexArray(meshVAO);
         glDrawArrays(GL_TRIANGLES, 0, meshSize);
@@ -244,6 +255,12 @@ void MainView::updateModelTransforms()
     meshTransform.scale(scale*5);
     meshTransform.rotate(QQuaternion::fromEulerAngles(rotation));
 
+    lightTransform.setToIdentity();
+    lightTransform.translate(0,0,-10);
+    lightTransform.scale(scale);
+    lightTransform.rotate(QQuaternion::fromEulerAngles(rotation));
+    lightTransform.translate(0,0,0);
+
     update();
 }
 
@@ -274,6 +291,7 @@ void MainView::setShadingMode(ShadingMode shading)
     qDebug() << "Changed shading to" << shading;
     currentShading = shading;
     update();
+}
 
 // --- Private helpers
 

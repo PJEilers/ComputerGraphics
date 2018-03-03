@@ -34,12 +34,16 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     GLint uniformModelViewTransformNormal;
     GLint uniformProjectionTransformNormal;
     GLint uniformNormalMatrixNormal;
+    GLint uniformLightPositionGouraud;
+    GLint uniformMaterialStatsGouraud;
+    GLint uniformMaterialColorGouraud;
 
     // Mesh values
     GLuint meshVAO;
     GLuint meshVBO;
     GLuint meshSize;
     QMatrix4x4 meshTransform;
+    QMatrix4x4 lightTransform;
 
     // Transforms
     float scale = 1.f;
