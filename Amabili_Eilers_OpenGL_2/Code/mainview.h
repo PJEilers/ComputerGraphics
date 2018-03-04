@@ -45,6 +45,7 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     GLint uniformProjectionTransformNormal;
     GLint uniformNormalMatrixNormal;
 
+    GLuint tex;
 
     // Mesh values
     GLuint meshVAO;
@@ -76,6 +77,8 @@ public:
     void setScale(int scale);
     void setShadingMode(ShadingMode shading);
 
+    QVector<quint8> imageToBytes(QImage image);
+
 protected:
     void initializeGL();
     void resizeGL(int newWidth, int newHeight);
@@ -98,6 +101,7 @@ private slots:
 private:
     void createShaderProgram();
     void loadMesh();
+    void loadTexture(QString file);
 
     void destroyModelBuffers();
 

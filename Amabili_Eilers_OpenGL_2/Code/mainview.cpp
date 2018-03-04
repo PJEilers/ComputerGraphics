@@ -174,6 +174,19 @@ void MainView::loadMesh()
 }
 
 
+void MainView::loadTexture(QString file) {
+    QImage image(file);
+    QVector<quint8> pixelData = imageToBytes(image);
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData.data());
+    // glGenerateMipmap(GL_TEXTURE_2D)
+}
+
+
+//QVector<QVector2D> Model::getTextureCoords(){}
+
 // --- OpenGL drawing
 
 /**
@@ -235,6 +248,9 @@ void MainView::paintGL() {
 
         shaderProgramNormal.release();
     }
+
+    //loadTexture(":/textures/cat_diff.png");
+    //texture;
 
 
 }
