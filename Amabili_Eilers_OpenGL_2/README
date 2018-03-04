@@ -1,8 +1,19 @@
-This is a README file
+### Assignment #3 - OpenGL 2 - Shaders and Texture Mapping - Computer Graphics course - 
+made by Lorenzo Amabili(p281542) and Pieter Jan Eilers(s2381575).
 
-When submitting your assignment, describe (briefly) the changes you made and what difficulties you encountered in this file.
+## The project consisted of implementing a set of shading techniques (i.e., Normal shader, Gouraud shader, and Phong shader) in such a way that users can swap between them. The work is built upon the previous software created for the first assignment.
+#Testing the implementation of the Normal shader, we noticed that without normalizing the normal at each vertex in the vertex shader the final result is biased. The colors of each side of the cat are always the same inpendently by the transformations applied. This does not occur when using the normal matrix.
+##The second part consisted of mapping a square diffuse texture to a mesh which is a cat in our case. 
 
-Also describe what controls (key short-cuts, mouse clicks, mouse movement etc) and possible bonus assignments you implemented, so we can check them more easily.
+Experiment with different wrapping and filter methods in your final application and
+describe what each one does
 
-If you have any suggestions/feedback for improving the practical assignments or support from teaching assistants, you may include it here OR post in anonymously on Nestor under Feedback.
 
+## Following the instructions, we completed successfully the implementation of "Shaders" (i.e., (a) Normal Shader (b) Gouraud Shader  (c) Phong Shader), and of "Texture mapping" (i.e., 
+
+## Including is a folder "Scenes" with two scenes in the form of two json files and two object files so one can recreate the results.
+
+## Prerequisites
+: cmake, building still works the same, we did not add multithreading. 
+
+## We used a GitHub repository for our project: https://github.com/PJEilers/ComputerGraphics
