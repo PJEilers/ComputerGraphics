@@ -24,5 +24,5 @@ void main()
     gl_Position =  projectionTransform *  modelViewTransform  * vec4(vertCoordinates_in, 1.0);
 
     vertNormals = normalMatrix*vertNormals_in;
-    //vertNormals = vertNormals_in;
+   // vertNormals = vertNormals_in;
 }

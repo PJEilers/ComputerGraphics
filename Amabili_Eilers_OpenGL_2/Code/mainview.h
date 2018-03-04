@@ -28,15 +28,23 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     GLint uniformModelViewTransformPhong;
     GLint uniformProjectionTransformPhong;
     GLint uniformNormalMatrixPhong;
+    GLint uniformLightPositionPhong;
+    GLint uniformMaterialStatsPhong;
+    GLint uniformMaterialColorPhong;
+    GLint uniformSampler2DPhong;
+
     GLint uniformModelViewTransformGouraud;
     GLint uniformProjectionTransformGouraud;
     GLint uniformNormalMatrixGouraud;
-    GLint uniformModelViewTransformNormal;
-    GLint uniformProjectionTransformNormal;
-    GLint uniformNormalMatrixNormal;
     GLint uniformLightPositionGouraud;
     GLint uniformMaterialStatsGouraud;
     GLint uniformMaterialColorGouraud;
+    GLint uniformSampler2DGouraud;
+
+    GLint uniformModelViewTransformNormal;
+    GLint uniformProjectionTransformNormal;
+    GLint uniformNormalMatrixNormal;
+
 
     // Mesh values
     GLuint meshVAO;

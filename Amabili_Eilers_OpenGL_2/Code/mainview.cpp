@@ -99,6 +99,10 @@ void MainView::createShaderProgram()
     uniformModelViewTransformPhong = shaderProgramPhong.uniformLocation("modelViewTransform");
     uniformProjectionTransformPhong = shaderProgramPhong.uniformLocation("projectionTransform");
     uniformNormalMatrixPhong = shaderProgramPhong.uniformLocation("normalMatrix");
+    uniformLightPositionPhong = shaderProgramPhong.uniformLocation("lightPosition");
+    uniformMaterialColorPhong = shaderProgramPhong.uniformLocation("materialColor");
+    uniformMaterialStatsPhong = shaderProgramPhong.uniformLocation("materialStats");
+    uniformSampler2DPhong = shaderProgramGouraud.uniformLocation("s2d");
 
     shaderProgramGouraud.link();
 
@@ -108,6 +112,7 @@ void MainView::createShaderProgram()
     uniformLightPositionGouraud = shaderProgramGouraud.uniformLocation("lightPosition");
     uniformMaterialColorGouraud = shaderProgramGouraud.uniformLocation("materialColor");
     uniformMaterialStatsGouraud = shaderProgramGouraud.uniformLocation("materialStats");
+    uniformSampler2DGouraud = shaderProgramGouraud.uniformLocation("s2d");
 
     shaderProgramNormal.link();
 
@@ -125,6 +130,7 @@ void MainView::loadMesh()
     meshData.reserve(2 * 3 * vertexCoords.size());
 
     QVector<QVector3D> vertexNormals = model.getNormals();
+    QVector<QVector2D> textureCoords = model.getTextureCoords();
     int i = 0;
     for (auto coord : vertexCoords)
     {
@@ -134,6 +140,8 @@ void MainView::loadMesh()
         meshData.append(vertexNormals[i].x());
         meshData.append(vertexNormals[i].y());
         meshData.append(vertexNormals[i].z());
+        //meshData.append(textureCoords[i].x());
+       // meshData.append(textureCoords[i].y());
         i++;
     }
 
@@ -157,6 +165,9 @@ void MainView::loadMesh()
     // Set colour coordinates to location 1
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -182,7 +193,7 @@ void MainView::paintGL() {
     QVector3D lightPosition(10,10,10);
     lightPosition = lightTransform * lightPosition;
     QVector3D materialColor(0.75,0.75,0.75);
-    QVector4D materialStats(0.2,0.7,0.5,8.0);
+    QVector4D materialStats(0.2,0.7,0.5,1.0);
 
 
     if(currentShading == PHONG) {
@@ -191,6 +202,9 @@ void MainView::paintGL() {
         glUniformMatrix4fv(uniformProjectionTransformPhong, 1, GL_FALSE, projectionTransform.data());
         glUniformMatrix4fv(uniformModelViewTransformPhong, 1, GL_FALSE, meshTransform.data());
         glUniformMatrix3fv(uniformNormalMatrixPhong, 1 , GL_FALSE, normalMatrix.data());
+        glUniform3f(uniformLightPositionPhong, lightPosition.x(), lightPosition.y(), lightPosition.z());
+        glUniform3f(uniformMaterialColorPhong, materialColor.x(), materialColor.y(), materialColor.z());
+        glUniform4f(uniformMaterialStatsPhong, materialStats.x(), materialStats.y(), materialStats.z(), materialStats.w());
 
         glBindVertexArray(meshVAO);
         glDrawArrays(GL_TRIANGLES, 0, meshSize);
@@ -212,7 +226,6 @@ void MainView::paintGL() {
         shaderProgramGouraud.release();
     } else {
         shaderProgramNormal.bind();
-        // Set the projection matrix
         glUniformMatrix4fv(uniformProjectionTransformNormal, 1, GL_FALSE, projectionTransform.data());
         glUniformMatrix4fv(uniformModelViewTransformNormal, 1, GL_FALSE, meshTransform.data());
         glUniformMatrix3fv(uniformNormalMatrixNormal, 1 , GL_FALSE, normalMatrix.data());
