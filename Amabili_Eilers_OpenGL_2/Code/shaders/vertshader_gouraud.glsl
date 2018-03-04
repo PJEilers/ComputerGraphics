@@ -19,7 +19,7 @@ uniform vec3 materialColor;
 uniform vec4 materialStats;
 
 // Specify the output of the vertex stage
-out vec3 vertColor;
+out float vertIntensity;
 out vec2 textureCoordinates;
 
 void main()
@@ -43,17 +43,17 @@ void main()
     float dotP = max(dot(n, lightVector), 0.0);
 
     //diffuse
-    vec3 diffuse = materialColor * materialStats.y * dotP;
+    float diffuse = materialStats.y * dotP;
 
     //specular
-    vec3 specular = vec3(0.0);
-    if(dotP > 0.0) specular = materialColor * materialStats.z * pow(max(dot(reflected, view), 0.0), materialStats.w);
+    float specular = 0.0;
+    if(dotP > 0.0) specular = materialStats.z * pow(max(dot(reflected, view), 0.0), materialStats.w);
 
     //ambient
-    vec3 ambient = materialColor * materialStats.x;
+    float ambient = materialStats.x;
 
     //Full phong
-    vertColor = diffuse + specular + ambient;
+    vertIntensity = diffuse + specular + ambient;
 
     textureCoordinates = textureCoordinates_in;
 

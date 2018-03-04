@@ -70,6 +70,7 @@ void MainView::initializeGL() {
 
     createShaderProgram();
     loadMesh();
+    loadTexture(":/textures/cat_diff.png");
 
     // Initialize transformations
     updateProjectionTransform();
@@ -125,12 +126,12 @@ void MainView::loadMesh()
 {
     Model model(":/models/cat.obj");
     QVector<QVector3D> vertexCoords = model.getVertices();
-
-    QVector<float> meshData;
-    meshData.reserve(2 * 3 * vertexCoords.size());
-
     QVector<QVector3D> vertexNormals = model.getNormals();
     QVector<QVector2D> textureCoords = model.getTextureCoords();
+
+    QVector<float> meshData;
+    meshData.reserve((2 * 3+2) * vertexCoords.size());
+
     int i = 0;
     for (auto coord : vertexCoords)
     {
@@ -140,8 +141,8 @@ void MainView::loadMesh()
         meshData.append(vertexNormals[i].x());
         meshData.append(vertexNormals[i].y());
         meshData.append(vertexNormals[i].z());
-        //meshData.append(textureCoords[i].x());
-       // meshData.append(textureCoords[i].y());
+        meshData.append(textureCoords[i].x());
+        meshData.append(textureCoords[i].y());
         i++;
     }
 
@@ -159,14 +160,14 @@ void MainView::loadMesh()
     glBufferData(GL_ARRAY_BUFFER, meshData.size() * sizeof(float), meshData.data(), GL_STATIC_DRAW);
 
     // Set vertex coordinates to location 0
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
     glEnableVertexAttribArray(0);
 
     // Set colour coordinates to location 1
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -177,15 +178,23 @@ void MainView::loadMesh()
 void MainView::loadTexture(QString file) {
     QImage image(file);
     QVector<quint8> pixelData = imageToBytes(image);
+    printf("%d\n", image.width());
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
+    // Set texture parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    // Set texture filtering
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData.data());
     // glGenerateMipmap(GL_TEXTURE_2D)
 }
 
 
-//QVector<QVector2D> Model::getTextureCoords(){}
+
 
 // --- OpenGL drawing
 
@@ -207,6 +216,9 @@ void MainView::paintGL() {
     lightPosition = lightTransform * lightPosition;
     QVector3D materialColor(0.75,0.75,0.75);
     QVector4D materialStats(0.2,0.7,0.5,1.0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+
 
 
     if(currentShading == PHONG) {
@@ -218,6 +230,7 @@ void MainView::paintGL() {
         glUniform3f(uniformLightPositionPhong, lightPosition.x(), lightPosition.y(), lightPosition.z());
         glUniform3f(uniformMaterialColorPhong, materialColor.x(), materialColor.y(), materialColor.z());
         glUniform4f(uniformMaterialStatsPhong, materialStats.x(), materialStats.y(), materialStats.z(), materialStats.w());
+        glUniform1i(uniformSampler2DPhong, 1);
 
         glBindVertexArray(meshVAO);
         glDrawArrays(GL_TRIANGLES, 0, meshSize);
@@ -249,8 +262,7 @@ void MainView::paintGL() {
         shaderProgramNormal.release();
     }
 
-    //loadTexture(":/textures/cat_diff.png");
-    //texture;
+
 
 
 }

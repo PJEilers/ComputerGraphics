@@ -17,7 +17,7 @@ uniform sampler2D s2d;
 
 // Specify the output of the fragment shader
 // Usually a vec4 describing a color (Red, Green, Blue, Alpha/Transparency)
-out vec4 fColor;
+out vec4 textureColor;
 
 void main()
 {
@@ -35,15 +35,17 @@ void main()
     float dotP = max(dot(n, lightVector), 0.0);
 
     //diffuse
-    vec3 diffuse = materialColor * materialStats.y * dotP;
+    float diffuse = materialStats.y * dotP;
 
     //specular
-    vec3 specular = vec3(0.0);
-    if(dotP > 0.0) specular = materialColor * materialStats.z * pow(max(dot(reflected, view), 0.0), materialStats.w);
+    float specular = 0;
+    if(dotP > 0.0) specular = materialStats.z * pow(max(dot(reflected, view), 0.0), materialStats.w);
 
     //Ambient
-    vec3 ambient = materialColor * materialStats.x;
+    float ambient = materialStats.x;
+
+    float phong = ambient + specular + diffuse;
 
     //Full Phong
-    fColor = vec4(diffuse + specular + ambient, 1.0);
+    textureColor = texture2D(s2d, textureCoordinates)*phong;
 }
