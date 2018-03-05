@@ -25,6 +25,7 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QOpenGLShaderProgram shaderProgramGouraud;
     QOpenGLShaderProgram shaderProgramPhong;
 
+    //Phong uniforms
     GLint uniformModelViewTransformPhong;
     GLint uniformProjectionTransformPhong;
     GLint uniformNormalMatrixPhong;
@@ -33,6 +34,7 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     GLint uniformMaterialColorPhong;
     GLint uniformSampler2DPhong;
 
+    //Gouraud uniforms
     GLint uniformModelViewTransformGouraud;
     GLint uniformProjectionTransformGouraud;
     GLint uniformNormalMatrixGouraud;
@@ -41,16 +43,18 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     GLint uniformMaterialColorGouraud;
     GLint uniformSampler2DGouraud;
 
+    //Normal uniforms
     GLint uniformModelViewTransformNormal;
     GLint uniformProjectionTransformNormal;
     GLint uniformNormalMatrixNormal;
 
-    GLuint tex;
+
 
     // Mesh values
     GLuint meshVAO;
     GLuint meshVBO;
     GLuint meshSize;
+    GLuint tex;
     QMatrix4x4 meshTransform;
     QMatrix4x4 lightTransform;
 
@@ -67,7 +71,7 @@ public:
         PHONG = 0, NORMAL, GOURAUD
     };
 
-    ShadingMode currentShading = PHONG;
+    ShadingMode currentShading = PHONG; //Current shading mode used.
 
     MainView(QWidget *parent = 0);
     ~MainView();
@@ -99,7 +103,7 @@ private slots:
     void onMessageLogged( QOpenGLDebugMessage Message );
 
 private:
-    void createShaderProgram();
+    void createShaderPrograms();
     void loadMesh();
     void loadTexture(QString file);
 
