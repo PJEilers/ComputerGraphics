@@ -8,6 +8,8 @@
 #include <cmath>
 #include <limits>
 
+#define BIAS 1e-5
+
 using namespace std;
 
 Color Scene::trace(Ray const &ray)
@@ -33,7 +35,35 @@ Color Scene::trace(Ray const &ray)
     Vector N = min_hit.N;                          //the normal at hit point
     Vector V = -ray.D;                             //View direction 
     
-    Color color = getLighting(material, hit, N, V); //Get full phong lighting
+    if(shadows) {
+        Color color = material.color*material.ka;
+        for(auto light : lights) {
+          
+            bool shadowed = false;
+            Vector L = (light->position - hit).normalized();
+            Ray r(hit + N*BIAS, L);
+            for (unsigned idx = 0; idx != objects.size(); ++idx)
+            {
+                Hit h(objects[idx]->intersect(r));
+                if (h.t < min_hit.t)
+                {
+                    shadowed = true;
+                    break;
+                } 
+                
+            }
+            if(!shadowed) color += getLighting(material, hit, N, V, light);
+        }
+        return color;
+    }
+    
+    //Get full phong lighting
+    Color color(0.0,0.0,0.0);
+    for (auto light : lights) {
+        color += getLighting(material, hit, N, V, light);
+    }
+    color += material.color*material.ka;
+    //Color color = getLighting(material, hit, N, V); 
 
     /****************************************************
     * This is where you should insert the color
@@ -100,6 +130,9 @@ unsigned Scene::getNumLights()
 {
     return lights.size();
 }
+void Scene::setShadows(bool s) {
+    shadows = s;
+}
 
 /**
  * @brief Calculates full phong lighting
@@ -107,32 +140,26 @@ unsigned Scene::getNumLights()
  * @returns The color of the pixel the be drawn
  */
 
-Color Scene::getLighting(Material material, Point hit, Vector N, Vector V) {
+Color Scene::getLighting(Material material, Point hit, Vector N, Vector V, LightPtr light) {
     
     Color color(0.0, 0.0, 0.0);
-    for(LightPtr &light : lights) {
-        Vector L = light->position - hit; 
-        L.normalize();
-        Vector R = N * 2 * L.dot(N) - L;
+    Vector L = light->position - hit; 
+    L.normalize();
+    Vector R = N * 2 * L.dot(N) - L;
     
-        //Diffuse
+    //Diffuse
     
-        Color id(0.0,0.0,0.0);
-        double dot = L.dot(N);
-        if(dot > 0) id = dot *  material.color* light->color * material.kd;
+    Color id(0.0,0.0,0.0);
+    double dot = L.dot(N);
+    if(dot > 0) id = dot *  material.color* light->color * material.kd;
     
-        //Specular
+    //Specular
     
-        dot = R.dot(V);    
-        Color is(0.0,0.0,0.0);
-        if(dot > 0) is = pow(dot, material.n) * light->color*material.ks;
+    dot = R.dot(V);    
+    Color is(0.0,0.0,0.0);
+    if(dot > 0) is = pow(dot, material.n) * light->color*material.ks;
     
-        color = color + id + is;
-    }
+    color = color + id + is;
     
-    //Ambient
-    
-    Color ia = material.color * material.ka;
-    
-    return color+ia;
+    return color;
 }

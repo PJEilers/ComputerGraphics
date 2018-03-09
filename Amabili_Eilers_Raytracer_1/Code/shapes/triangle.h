@@ -3,23 +3,19 @@
 
 #include "../object.h"
 
-/**
- * A triangle is consists of three points or vertices in 3d space.
- */
-
 class Triangle: public Object
 {
     public:
-        Triangle(Point const &v1, Point const &v2, Point const &v3);
+        Triangle(Point const &v0,
+                 Point const &v1,
+                 Point const &v2);
 
         virtual Hit intersect(Ray const &ray);
 
-        /* Data members*/
-
-        Point const v1;
-        Point const v2;
-        Point const v3;
-
+        Point v0;
+        Point v1;
+        Point v2;
+        Vector N;
 };
 
 #endif

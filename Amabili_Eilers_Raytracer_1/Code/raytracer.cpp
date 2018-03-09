@@ -113,6 +113,12 @@ try
 
     Point eye(jsonscene["Eye"]);
     scene.setEye(eye);
+    json j = jsonscene["Shadows"];
+    bool shadows = false;
+    if(j.is_boolean()) {
+        shadows = j.get<bool>();
+    }
+    scene.setShadows(shadows);
 
     // TODO: add your other configuration settings here
 

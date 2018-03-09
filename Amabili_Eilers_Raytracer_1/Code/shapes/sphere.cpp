@@ -1,4 +1,5 @@
 #include "sphere.h"
+#include "solvers.h"
 
 #include <cmath>
 
@@ -6,64 +7,36 @@ using namespace std;
 
 Hit Sphere::intersect(Ray const &ray)
 {
-    /****************************************************
-    * RT1.1: INTERSECTION CALCULATION
-    *
-    * Given: ray, position, r
-    * Sought: intersects? if true: *t
-    *
-    * Insert calculation of ray/sphere intersection here.
-    *
-    * You have the sphere's center (C) and radius (r) as well as
-    * the ray's origin (ray.O) and direction (ray.D).
-    *
-    * If the ray does not intersect the sphere, return false.
-    * Otherwise, return true and place the distance of the
-    * intersection point from the ray origin in *t (see example).
-    ****************************************************/
+    // Sphere formula: ||x - position||^2 = r^2
+    // Line formula:   x = ray.O + t * ray.D
 
-    Vector OC = (position - ray.O);
-    double tca = OC.dot(ray.D);
-    if (tca < 0) {
+    Vector L = ray.O - position;
+    double a = ray.D.dot(ray.D);
+    double b = 2 * ray.D.dot(L);
+    double c = L.dot(L) - r * r;
+
+    double t0;
+    double t1;
+    if (not Solvers::quadratic(a, b, c, t0, t1))
         return Hit::NO_HIT();
-    }
-    
-    double d = sqrt(OC.dot(OC) - tca*tca);
-    
-    if(d > r) {
-        return Hit::NO_HIT();
-    }
-    
-    double tch = sqrt(r*r -d*d);
-    double t1 = tca-tch;
-    double t2 = tca + tch;
-    
-    
-    if (t1 > t2) swap(t1,t2); //Smallest t is closest intersection
-    
-    if (t1 < 0) {
-        t1 = t2;
-        if (t1 < 0) return Hit::NO_HIT(); //Both intersections are negative
+
+    // t0 is closest hit
+    if (t0 < 0)  // check if it is not behind the camera
+    {
+        t0 = t1;    // try t1
+        if (t0 < 0) // both behind the camera
+            return Hit::NO_HIT();
     }
 
-    double t = t1;
-    
+    // calculate normal
+    Point hit = ray.at(t0);
+    Vector N = (hit - position).normalized();
 
-    /****************************************************
-    * RT1.2: NORMAL CALCULATION
-    *
-    * Given: t, C, r
-    * Sought: N
-    *
-    * Insert calculation of the sphere's normal at the intersection point.
-    ****************************************************/
-    
-    Vector p = ray.at(t); //Point of intersection
-    Vector N = p - position;
-    
-    N.normalize();
+    // determine orientation of the normal
+    if (N.dot(ray.D) > 0)
+        N = -N;
 
-    return Hit(t,N);
+    return Hit(t0, N);
 }
 
 Sphere::Sphere(Point const &pos, double radius)

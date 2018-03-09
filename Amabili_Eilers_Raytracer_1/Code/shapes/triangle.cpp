@@ -1,67 +1,54 @@
 #include "triangle.h"
 
+#include <cfloat>   // DBL_EPSILON
 #include <cmath>
-#define eps 1e-9
-
-using namespace std;
 
 Hit Triangle::intersect(Ray const &ray)
 {
-    /****************************************************
-    * RT1.1: INTERSECTION AND NORMAL CALCULATION
-    *
-    * Given: ray.0, ray.D, v1, v2, v3
-    * Sought: intersects? if true: *t
-    *
-    * Using the Möller-Trumbore algorithm
-    * 
-    * https://en.wikipedia.org/wiki/MollerTrumbore_intersection_algorithm
-    *
-    ****************************************************/
+    // Möller-Trumbore
+    Vector edge1(v1 - v0);
+    Vector edge2(v2 - v0);
+    Vector h = ray.D.cross(edge2);
+    double a = edge1.dot(h);
+    if (a > -DBL_EPSILON && a < DBL_EPSILON)
+        return Hit::NO_HIT();
 
-    
-    // Edge vectors
+    double f = 1 / a;
+    Vector s = ray.O - v0;
+    double u = f * s.dot(h);
+    if (u < 0.0 || u > 1.0)
+        return Hit::NO_HIT();
 
-    Vector e1 = (v2 - v1);
-    Vector e2 = (v3 - v1);
-    
-    //Calculating determinant
+    Vector q = s.cross(edge1);
+    double v = f * ray.D.dot(q);
+    if (v < 0.0 || u + v > 1.0)
+        return Hit::NO_HIT();
 
-    Vector pv = ray.D.cross(e2);
-    double det = e1.dot(pv);
-  
-    // Checking if ray is (almost) parallel to triangle
-    
-    if (fabs(det) < eps) return Hit::NO_HIT();
-    
-    
-    //Inverse of determinant
-    
-    double invDet = 1.0 / det;
-    
-    Vector tv = ray.O - v1;
-    double u = tv.dot(pv)*invDet;
-    
-    if (u < 0 || u > 1) return Hit::NO_HIT();
-    
-    Vector qv = tv.cross(e1);
-    double v = ray.D.dot(qv) * invDet;
-    
-    if (v < 0 || u + v > 1) return Hit::NO_HIT(); 
+    double t = f * edge2.dot(q);
 
-    double t =  e2.dot(qv) * invDet;
-    
-    // Normal calculation
-    
-    Vector N = e1.cross(e2);
-    N.normalize();
+    if (t <= DBL_EPSILON)    // line intersection (not ray)
+        return Hit::NO_HIT();
 
-    return Hit(t, N);
+    // determine orientation of the normal
+    Vector normal = N;
+    if (N.dot(ray.D) > 0)
+        normal = -normal;
+
+    return Hit(t, normal);
 }
 
-Triangle::Triangle(Point const &v1, Point const &v2, Point const &v3)
+Triangle::Triangle(Point const &v0,
+         Point const &v1,
+         Point const &v2)
 :
+    v0(v0),
     v1(v1),
     v2(v2),
-    v3(v3)
-{}
+    N()
+{
+    // Calculate surface normal
+    Vector U(v1 - v0);
+    Vector V(v2 - v0);
+    N = U.cross(V);
+    N.normalize();
+}
