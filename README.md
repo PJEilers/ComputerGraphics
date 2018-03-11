@@ -1,8 +1,17 @@
-### Assignment #2 - Raytracer 1 - Computer Graphics course - made
-by Lorenzo Amabili(p281542) and Pieter Jan Eilers(s2381575) .
-## The project consisted of producing a 3D scene using a basic ray tracing algorithm, and the implementation of (Phong) illumination will be based on the intersection calculation together with normal calculation. Additional geometries such as a triangle and a plane have been implemented too.
-## Following the instructions, we completed successfully the implementation of "Raycasting with spheres & Phong illumination" (i.e., (a) Phong diffuse (b) Full Phong (c) Scene 2) ), whereas we partially completed the section "Additional geometry and meshes ".
+### Computer Graphics course - Assignments - OpenGL and Raytracer
+made by Lorenzo Amabili(p281542) and Pieter Jan Eilers(s2381575).
+
+## The Lab sessions of this course focused on
+
+0) OpenGL basics - Rendering a triangle
+1) OpenGL 1 - Transformations and User Input - Shape drawing, Scaling and Rotation, Object loading  
+2) Raytracer 1 - Raycasting with spheres & Phong illumination, Additional geometry and meshes
+3) OpenGL 2 - Shaders and Texture Mapping
+4) Raytracer 2 - Optical laws, Anti-aliasing, Texturing
+5) OpenGL 3 - Common animation, Advanced vertex manipulation
+
+
 
 ## Prerequisites
-: cmake, building still works the same, we did not add multithreading 
-## We used a GitHub repository for our project: https://github.com/PJEilers/ComputerGraphics
+QtCreator, cmake, C++
+
