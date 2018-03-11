@@ -1,0 +1,84 @@
+1: 0.3/1
+2: 2.5/3
+3: 1.4/2
+4: 1.5/2
+Code: 0.5/2
+Late 36 hours: -1.5
+
+﻿﻿﻿Code:
+Do not submit build folders! -0.5
+mainviewalt.cpp What??? Please remove files not needed.
+initializeGL() is too long. Use functions to define your objects! -0.5
+
+glGenBuffers(12, vboCube);
+First argument should be the number of buffers (1), not the number of vertices
+You specify the size in glBufferData only!
+To get the address of a variable, use the &
+You are now leaking resources since you only delete 1 in the destructor
+
+Do not use new in C++ unless you want to allocate memory (like malloc in C)
+If you do, please make sure that you free your pointers! -0.25
+Tip: instead of storing the mesh, combine loadModel with initializeMesh
+
+1:
+Culling should be enabled.
+Your cube and pyramid are missing faces -0.2
+You are leaking resources (see also the note under code) -0.5
+
+2:
+Wrong order of operations in vertex shader
+Usually: projection * view (not used here) * model
+Scale should be included in the model transform -0.5
+
+3:
+Far clipping plane is too close on max scale (sphere disappears partly) -0.1
+Normally you do not store model transformation matrices but only their
+values (like: translate x,y,z, rotate x,y,z and scale s).
+Tip: define a struct Object (or similar) with members for and the
+values described above.
+Then before drawing, you create a QMatrix4x4 (identity by default())
+and apply all transformations. Resetting is then as easy as setting the values
+to 0 and calling update()/repaint() -0.5
+This will make your life easier later on with animations and a large number of
+objects!
+
+4:
+It works, but you are leaking resources (see also the note under code) -0.5
+
+
+
+1: 4/4
+2: 2.5/4
+Code: 2/2
+Late 12h: -0.5
+
+﻿﻿eedback:
+
+For normalizing a Vector, you may use
+.normalized() (note the d)
+to get a normalized version of it
+
+Code:
+
+1:
+Working as described.
+Altough, do mention the sources you used!
+
+Most common solution was to use the sphere formula:
+|| x - position||^2 = r^2
+and the ray formula:
+x = ray.O + t * ray.D
+Which gives you a quadratic equation which you can solve
+with the ABC formula (for which the values of ABC were
+given in Jiri's slides)
+
+2:
+In your plane.cpp you use the normal directly.
+What if you happen to view the plane from the back?
+Makes sure that the direction of the normal
+is the right one (as you are viewing them) -0.5
+Same as with the triangle
+
+Missing a second shape -1
+
+Code: the large switch statement in your paint method can be refactored (at leas splitting it into multiple methods). Please remove commented-out code.
