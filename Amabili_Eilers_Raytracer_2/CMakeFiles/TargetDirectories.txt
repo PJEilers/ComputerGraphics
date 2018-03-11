@@ -1,0 +1,3 @@
+/home/lorenzo/ComputerGraphics/Amabili_Eilers_Raytracer_1/CMakeFiles/rebuild_cache.dir
+/home/lorenzo/ComputerGraphics/Amabili_Eilers_Raytracer_1/CMakeFiles/ray.dir
+/home/lorenzo/ComputerGraphics/Amabili_Eilers_Raytracer_1/CMakeFiles/edit_cache.dir
