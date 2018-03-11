@@ -56,7 +56,7 @@ unsigned Image::size() const
 }
 
 // Normalized accessors, unsignederval is (0...1, 0...1)
-// usefull for texture access
+// useful for texture access
 Color const &Image::colorAt(float x, float y) const
 {
     return d_pixels.at(findex(x, y));
@@ -87,7 +87,7 @@ void Image::read_png(std::string const &filename)
     while (imgIter != image.end())
     {
         double r = (*imgIter) / 255.0;
-        ++imgIter;
+        ++imgIter; 
         double g = (*imgIter) / 255.0;
         ++imgIter;
         double b = (*imgIter) / 255.0;
@@ -96,4 +96,17 @@ void Image::read_png(std::string const &filename)
         ++imgIter;
         d_pixels.push_back(Color(r, g, b));
     }
+}
+
+// Texture Mapping
+
+Color Image::TextMap(std::string const &filename, double u, double v) {
+    
+    Image texture = Image(filename);
+    unsigned height = texture.height();
+    unsigned width  = texture.width();
+
+    Color pixels = texture.colorAt(width, height);
+
+    return pixels;
 }
