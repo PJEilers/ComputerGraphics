@@ -5,10 +5,12 @@
 #include "material.h"
 #include "ray.h"
 
+#define M_PI
+#define BIAS 1e-5
+
 #include <cmath>
 #include <limits>
 
-#define BIAS 1e-5
 
 using namespace std;
 
@@ -63,6 +65,8 @@ Color Scene::trace(Ray const &ray)
         color += getLighting(material, hit, N, V, light);
     }
     color += material.color*material.ka;
+
+
     //Color color = getLighting(material, hit, N, V); 
 
     /****************************************************
@@ -164,3 +168,9 @@ Color Scene::getLighting(Material material, Point hit, Vector N, Vector V, Light
     
     return color;
 }
+
+
+// Texture Mapping
+
+std::string texturefile = "/home/lorenzo/ComputerGraphic/bluegrid.png";
+TextMap(texturefile, u, v);
