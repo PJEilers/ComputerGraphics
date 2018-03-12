@@ -37,6 +37,8 @@ Hit Triangle::intersect(Ray const &ray)
     return Hit(t, normal);
 }
 
+Color Triangle::getTextureColor(Point hit){return Color(0.0,0.0,0.0);}
+
 Triangle::Triangle(Point const &v0,
          Point const &v1,
          Point const &v2)

@@ -26,16 +26,19 @@ Color Scene::trace(Ray const &ray)
             obj = objects[idx];
         }
     }
+    
+    
 
     // No hit? Return background color.
     if (!obj) return Color(0.0, 0.0, 0.0);
-
     Material material = obj->material;             //the hit objects material
     Point hit = ray.at(min_hit.t);                 //the hit point
     Vector N = min_hit.N;                          //the normal at hit point
     Vector V = -ray.D;                             //View direction 
     Vector R = N*2*V.dot(N) - V;                   //Reflection vector
     Ray reflectionRay(hit + N*BIAS, R);            //Reflection ray
+    
+    if(material.hasTexture) 
     
     if(shadows) {
         Color color = material.color*material.ka;
@@ -57,7 +60,7 @@ Color Scene::trace(Ray const &ray)
                 } 
                 
             }
-            if(!shadowed) color += getDiffuseAndSpecularLighting(material, hit, N, V, light);
+            if(!shadowed) color += getDiffuseAndSpecularLighting(material, hit, N, V, light, obj);
         }
         
         color += getSpecularReflection(material,reflectionRay,N,material.ks, Color(0.0,0.0,0.0), 0);
@@ -68,7 +71,7 @@ Color Scene::trace(Ray const &ray)
     Color color(0.0,0.0,0.0);
         
     for (auto light : lights) {
-        color += getDiffuseAndSpecularLighting(material, hit, N, V, light);
+        color += getDiffuseAndSpecularLighting(material, hit, N, V, light, obj);
         color += getSpecularReflection(material, reflectionRay, N, material.ks , Color(0.0,0.0,0.0) , 0);
     }
 
@@ -157,11 +160,16 @@ void Scene::setSuperSamplingFactor(int factor) {
  * @returns The color of the pixel the be drawn
  */
 
-Color Scene::getDiffuseAndSpecularLighting(Material material, Point hit, Vector N, Vector V, LightPtr light) {
+Color Scene::getDiffuseAndSpecularLighting(Material material, Point hit, Vector N, Vector V, LightPtr light, ObjectPtr obj) {
+    
+       
+    Color materialColor;
+    if(material.hasTexture) {
+        obj->getTextureColor(hit);
+    }
     
     Color color(0.0, 0.0, 0.0);
-    Vector L = light->position - hit; 
-    L.normalize();
+    Vector L = (light->position - hit).normalized(); 
     Vector R = N * 2 * L.dot(N) - L;
     
     //Diffuse
@@ -209,6 +217,7 @@ Color Scene::getSpecularReflection(Material material, Ray r, Vector N, double ks
     Point hitPoint = r.at(min_hit.t);
     
     Material newMaterial = obj->material;
+ 
     
     reflected += newMaterial.color * ks;
     

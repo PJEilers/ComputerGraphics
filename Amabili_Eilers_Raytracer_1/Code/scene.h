@@ -25,7 +25,7 @@ class Scene
 
         // trace a ray into the scene and return the color
         Color trace(Ray const &ray);
-        Color getDiffuseAndSpecularLighting(Material material, Point hit, Vector N, Vector V, LightPtr light);
+        Color getDiffuseAndSpecularLighting(Material material, Point hit, Vector N, Vector V, LightPtr light, ObjectPtr obj);
         Color getSpecularReflection(Material material, Ray r, Vector N, double ks, Color reflected, int depth);
 
         // render the scene to the given image

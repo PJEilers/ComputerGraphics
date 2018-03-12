@@ -35,6 +35,8 @@ Hit Plane::intersect(Ray const &ray)
     return Hit(t,N);
 }
 
+Color Plane::getTextureColor(Point hit){return Color(0.0,0.0,0.0);}
+
 Plane::Plane(const Point &pos, const Point &n)
 :
     position(pos),

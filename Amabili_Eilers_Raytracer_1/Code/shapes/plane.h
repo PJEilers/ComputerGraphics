@@ -13,6 +13,8 @@ class Plane: public Object
         Plane(const Point &pos, const Point &n);
 
         virtual Hit intersect(Ray const &ray);
+        
+        virtual Color getTextureColor(Point hit);
 
         const Point position;
         const Point normal;

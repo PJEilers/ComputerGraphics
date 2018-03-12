@@ -27,12 +27,12 @@
 #include <fstream>
 #include <iostream>
 
-
+bool hasTexture = false;
 
 using namespace std;        // no std:: required
 using json = nlohmann::json;
 
-bool Raytracer::parseObjectNode(json const &node)
+bool Raytracer::parseObjectNode(json &node)
 {
     ObjectPtr obj = nullptr;
 
@@ -44,7 +44,8 @@ bool Raytracer::parseObjectNode(json const &node)
     {
         Point pos(node["position"]);
         double radius = node["radius"];
-        obj = ObjectPtr(new Sphere(pos, radius));
+            obj = ObjectPtr(new Sphere(pos, radius));
+
     }
     else if (node["type"] == "plane") 
     {
@@ -78,23 +79,47 @@ bool Raytracer::parseObjectNode(json const &node)
     // Parse material and add object to the scene
     obj->material = parseMaterialNode(node["material"]);
     scene.addObject(obj);
+    hasTexture = false;
     return true;
 }
 
-Light Raytracer::parseLightNode(json const &node) const
+Light Raytracer::parseLightNode(json &node) const
 {
     Point pos(node["position"]);
     Color col(node["color"]);
     return Light(pos, col);
 }
 
-Material Raytracer::parseMaterialNode(json const &node) const
+Material Raytracer::parseMaterialNode(json &node) const
 {
-    Color color(node["color"]);
+
+    Color color;
+    Image texture;
+    
+   
+    json j = node["texture"];
+    if(!j.is_null() && j.is_string()) {
+        string name = j.get<string>();
+        cout << name;
+        Image t(name);
+        texture = t;
+        hasTexture = true;
+    }
+    
+    
+     if(!hasTexture) {
+        Color col(node["color"]);
+        color = col;
+    }
+    
     double ka = node["ka"];
     double kd = node["kd"];
     double ks = node["ks"];
     double n  = node["n"];
+    if(hasTexture) {
+        printf("hello\n");
+        return Material(Color(0.5,0.5,0.5), ka, kd ,ks ,n, true, texture);
+    }
     return Material(color, ka, kd, ks, n);
 }
 
@@ -141,11 +166,11 @@ try
     
     // TODO: add your other configuration settings here
 
-    for (auto const &lightNode : jsonscene["Lights"])
+    for (auto &lightNode : jsonscene["Lights"])
         scene.addLight(parseLightNode(lightNode));
 
     unsigned objCount = 0;
-    for (auto const &objectNode : jsonscene["Objects"])
+    for (auto &objectNode : jsonscene["Objects"])
         if (parseObjectNode(objectNode))
             ++objCount;
 
@@ -174,7 +199,7 @@ void Raytracer::renderToFile(string const &ofname)
     cout << "Done.\n";
 }
 
-bool Raytracer::initializeMesh (json const &node) {
+bool Raytracer::initializeMesh (json &node) {
     json j = node["name"];
     string name;
         

@@ -39,8 +39,19 @@ Hit Sphere::intersect(Ray const &ray)
     return Hit(t0, N);
 }
 
+Color Sphere::getTextureColor(Point hit){
+    hit.normalize();
+    printf("%d, %d\n", material.texture->size());
+    double u = 0.5+atan2(hit.y, hit.x) / 2*M_PI;
+    double v = 1 - acos(hit.z) /M_PI;
+  //  printf("%lf, %lf\n", u,v);
+   // return material.texture.colorAt(u,v);
+    return Color(0.1,0.1,0.1);
+}
+
 Sphere::Sphere(Point const &pos, double radius)
 :
     position(pos),
     r(radius)
 {}
+
