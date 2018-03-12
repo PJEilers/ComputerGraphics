@@ -113,13 +113,32 @@ try
 
     Point eye(jsonscene["Eye"]);
     scene.setEye(eye);
+    
+    //Check if shadows are enabled
+    
     json j = jsonscene["Shadows"];
     bool shadows = false;
     if(j.is_boolean()) {
         shadows = j.get<bool>();
     }
     scene.setShadows(shadows);
-
+    
+    //Get the max recursion depth for reflections
+    j = jsonscene["MaxRecursionDepth"];
+    int recursionDepth = 0;
+    if(j.is_number()) {
+        recursionDepth = j.get<int>();
+    }
+    scene.setMaxRecursionDepth(recursionDepth);
+    //Get the super sampling factor
+    j = jsonscene["SuperSamplingFactor"];
+    int superSamplingFactor = 1;
+    if(j.is_number()) {
+        superSamplingFactor = j.get<int>();
+    }
+    scene.setSuperSamplingFactor(superSamplingFactor);
+    
+    
     // TODO: add your other configuration settings here
 
     for (auto const &lightNode : jsonscene["Lights"])

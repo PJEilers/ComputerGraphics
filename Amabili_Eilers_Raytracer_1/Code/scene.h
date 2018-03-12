@@ -18,12 +18,15 @@ class Scene
     std::vector<LightPtr> lights;   // no ptr needed, but kept for consistency
     Point eye;
     bool shadows;
+    int maxRecursionDepth;
+    int superSamplingFactor;
 
     public:
 
         // trace a ray into the scene and return the color
         Color trace(Ray const &ray);
-        Color getLighting(Material material, Point hit, Vector N, Vector V, LightPtr light);
+        Color getDiffuseAndSpecularLighting(Material material, Point hit, Vector N, Vector V, LightPtr light);
+        Color getSpecularReflection(Material material, Ray r, Vector N, double ks, Color reflected, int depth);
 
         // render the scene to the given image
         void render(Image &img);
@@ -33,7 +36,10 @@ class Scene
         void addLight(Light const &light);
         void setEye(Triple const &position);
         void setShadows(bool s);
-
+        void setMaxRecursionDepth(int depth);
+        void setSuperSamplingFactor(int factor);
+ 
+        
         unsigned getNumObject();
         unsigned getNumLights();
 };
