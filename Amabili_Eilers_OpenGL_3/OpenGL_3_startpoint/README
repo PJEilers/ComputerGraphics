@@ -1,0 +1,14 @@
+### Assignment #5 - OpenGL 3 - Shaders and Texture Mapping - Computer Graphics course - 
+made by Lorenzo Amabili(p281542) and Pieter Jan Eilers(s2381575).
+
+## The project consisted of implementing the most common forms of animation in Computer Graphics (i.e., rotating a model, animating a complete scene) and customising vertex shaders to obtain particular effects (i.e., animating water)  in such a way that users can swap between them. The work is built upon the previous software created for the first assignment. We decided to continue building on the starting point for this assigment that was given on nestor since our Open_GL_1 results were not very good.
+#Testing the implementation of the Normal shader, we noticed that without normalizing the normal at each vertex in the vertex shader the final result is biased. The colors of each side of the cat are always the same inpendently by the transformations applied. This does not occur when using the normal matrix.
+##The second part consisted of mapping a square diffuse texture to a mesh. We used the given mesh of a cat and the gives texture cat_diff.png that goes with it. If we change the wrap by multiplying the coordinates in the vertshader by (2,2) for example, the texture does not really fit anymore and the result is messed up. See screenshots.
+Change the filtering from GL_NEAREST to GL_LINEAR did not seem to change anything, also mipmapping didn't seem to change anything, not even on extreme zooming, but maybe we were using it incorrectly.
+
+## Following the instructions, we completed successfully the implementation of "Shaders" (i.e., (a) Normal Shader (b) Gouraud Shader  (c) Phong Shader), and of "Texture mapping" (i.e., 
+
+## Prerequisites
+: qtcreator
+
+## We used a GitHub repository for our project: https://github.com/PJEilers/ComputerGraphics
