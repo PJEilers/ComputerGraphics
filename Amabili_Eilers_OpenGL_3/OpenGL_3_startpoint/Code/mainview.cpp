@@ -31,7 +31,7 @@ MainView::~MainView() {
 
     qDebug() << "MainView destructor";
 
-    glDeleteTextures(1, &texturePtr1);
+    glDeleteTextures(1, &meshProperties1.texID);
 
     destroyModelBuffers();
 }
@@ -133,8 +133,8 @@ void MainView::createShaderProgram()
 
 void MainView::loadMeshes()
 {
-    meshSize1 = loadMesh(":/models/cat.obj", meshVAO1);
-    meshProperties1.location = QVector3D(2,-1.5,-.4);
+    meshSize1 = loadMesh(":/models/cat.obj", meshProperties1.vaoID);
+    setProperties(QVector3D(2,-1.5,-4), QVector3D(0,0,0), 0.01, meshSize1, meshProperties1);
     meshSize2 = loadMesh(":/models/cube.obj", meshVAO2);
 
 }
@@ -187,8 +187,8 @@ void MainView::drawMesh(GLuint texturePtr, GLuint meshVAO, GLuint meshSize)
 
 void MainView::loadTextures()
 {
-    glGenTextures(1, &texturePtr1);
-    loadTexture(":/textures/cat_diff.png", texturePtr1);
+    glGenTextures(1, &meshProperties1.texID);
+    loadTexture(":/textures/cat_diff.png", meshProperties1.texID);
     glGenTextures(1, &texturePtr2);
     loadTexture(":/textures/rug_logo.png", texturePtr2);
 
@@ -232,7 +232,7 @@ void MainView::paintGL() {
         shaderProgram = &normalShaderProgram;
         shaderProgram->bind();
         updateNormalUniforms();
-        drawMesh(texturePtr1, meshVAO1, meshSize1);
+        drawMesh(meshProperties1.texID, meshProperties1.vaoID, meshSize1);
         glUniformMatrix4fv(uniformModelViewTransformNormal, 1, GL_FALSE, meshTransform2.data());
         glUniformMatrix3fv(uniformNormalTransformNormal, 1, GL_FALSE, meshNormalTransform2.data());
         drawMesh(texturePtr2, meshVAO2, meshSize2);
@@ -241,7 +241,7 @@ void MainView::paintGL() {
         shaderProgram = &gouraudShaderProgram;
         shaderProgram->bind();
         updateGouraudUniforms();
-        drawMesh(texturePtr1, meshVAO1, meshSize1);
+        drawMesh(meshProperties1.texID, meshProperties1.vaoID, meshSize1);
         glUniformMatrix4fv(uniformModelViewTransformGouraud, 1, GL_FALSE, meshTransform2.data());
         glUniformMatrix3fv(uniformNormalTransformGouraud, 1, GL_FALSE, meshNormalTransform2.data());
         drawMesh(texturePtr2, meshVAO2, meshSize2);
@@ -250,7 +250,7 @@ void MainView::paintGL() {
         shaderProgram = &phongShaderProgram;
         shaderProgram->bind();
         updatePhongUniforms();
-        drawMesh(texturePtr1, meshVAO1, meshSize1);
+        drawMesh(meshProperties1.texID, meshProperties1.vaoID, meshSize1);
         glUniformMatrix4fv(uniformModelViewTransformPhong, 1, GL_FALSE, meshTransform2.data());
         glUniformMatrix3fv(uniformNormalTransformPhong, 1, GL_FALSE, meshNormalTransform2.data());
         drawMesh(texturePtr2, meshVAO2, meshSize2);
@@ -319,15 +319,17 @@ void MainView::updateProjectionTransform()
 void MainView::updateModelTransforms()
 {
     meshTransform1.setToIdentity();
-    meshTransform1.translate(2, -1.5+t, -4);
-   // t+=0.01;
+    meshProperties1.location += QVector3D(0,meshProperties1.speed,0);
+    meshProperties1.speed -= 0.01/180;
+    meshTransform1.translate(meshProperties1.location);
+
     meshTransform1.scale(scale);
-    meshTransform1.rotate(QQuaternion::fromEulerAngles(rotation));
+    meshTransform1.rotate(QQuaternion::fromEulerAngles(meshProperties1.rotation));
     meshNormalTransform1 = meshTransform1.normalMatrix();
 
 
     meshTransform2.setToIdentity();
-    meshTransform2.translate(-2, 0, -4);
+    meshTransform2.translate(-2, 0, -8);
     meshTransform2.scale(scale*0.5);
     meshTransform2.rotate(QQuaternion::fromEulerAngles(rotation));
     meshNormalTransform2 = meshTransform2.normalMatrix();
@@ -342,7 +344,7 @@ void MainView::updateModelTransforms()
 void MainView::destroyModelBuffers()
 {
     glDeleteBuffers(1, &meshVBO);
-    glDeleteVertexArrays(1, &meshVAO1);
+    glDeleteVertexArrays(1, &meshProperties1.vaoID);
 }
 
 // --- Public interface

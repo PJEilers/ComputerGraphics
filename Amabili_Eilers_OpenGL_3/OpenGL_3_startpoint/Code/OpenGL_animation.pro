@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     mainview.cpp \
     user_input.cpp \
     model.cpp \
-    utility.cpp
+    utility.cpp \
+    properties.cpp
 
 HEADERS  += mainwindow.h \
     mainview.h \
