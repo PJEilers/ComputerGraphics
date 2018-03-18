@@ -9,7 +9,8 @@ layout (location = 1) in vec3 vertNormals_in;
 layout (location = 2) in vec2 texCoords_in;
 
 // Specify the Uniforms of the vertex shader
-uniform mat4 modelViewTransform;
+uniform mat4 modelTransform;
+uniform mat4 viewTransform;
 uniform mat4 projectionTransform;
 uniform vec3 lightPosition;
 uniform mat3 normalTransform;
@@ -22,11 +23,11 @@ out vec2 texCoords;
 
 void main()
 {
-    gl_Position  = projectionTransform * modelViewTransform * vec4(vertCoordinates_in, 1.0);
+    gl_Position  = projectionTransform * viewTransform *  modelTransform * vec4(vertCoordinates_in, 1.0);
 
     // Pass the required information to the fragment stage.
-    relativeLightPosition = vec3(modelViewTransform * vec4(lightPosition, 1));
-    vertPosition = vec3(modelViewTransform * vec4(vertCoordinates_in, 1));
+    relativeLightPosition = vec3(viewTransform * modelTransform * vec4(lightPosition, 1));
+    vertPosition = vec3(viewTransform * modelTransform * vec4(vertCoordinates_in, 1));
     vertNormal   = normalTransform * vertNormals_in;
     texCoords    = texCoords_in;
 }

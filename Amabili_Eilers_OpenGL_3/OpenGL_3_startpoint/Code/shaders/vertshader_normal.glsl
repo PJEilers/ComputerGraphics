@@ -9,6 +9,7 @@ layout (location = 1) in vec3 vertNormals_in;
 
 // Specify the Uniforms of the vertex shader
 uniform mat4 modelViewTransform;
+uniform mat4 viewTransform;
 uniform mat4 projectionTransform;
 uniform mat3 normalTransform;
 
@@ -17,6 +18,6 @@ out vec3 vertNormal;
 
 void main()
 {
-    gl_Position = projectionTransform * modelViewTransform * vec4(vertCoordinates_in, 1.0);
+    gl_Position = projectionTransform * viewTransform * modelTransform * vec4(vertCoordinates_in, 1.0);
     vertNormal  = normalTransform * vertNormals_in;
 }

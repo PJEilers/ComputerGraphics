@@ -28,12 +28,14 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
                          phongShaderProgram;
 
     // Uniforms for the normal shader.
-    GLint uniformModelViewTransformNormal;
+    GLint uniformModelTransformNormal;
+    GLint uniformViewTransformNormal;
     GLint uniformProjectionTransformNormal;
     GLint uniformNormalTransformNormal;
 
     // Uniforms for the gouraud shader.
-    GLint uniformModelViewTransformGouraud;
+    GLint uniformModelTransformGouraud;
+    GLint uniformViewTransformGouraud;
     GLint uniformProjectionTransformGouraud;
     GLint uniformNormalTransformGouraud;
 
@@ -44,7 +46,8 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     GLint uniformTextureSamplerGouraud;
 
     // Uniforms for the phong shader.
-    GLint uniformModelViewTransformPhong;
+    GLint uniformViewTransformPhong;
+    GLint uniformModelTransformPhong;
     GLint uniformProjectionTransformPhong;
     GLint uniformNormalTransformPhong;
 
@@ -55,21 +58,19 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     GLint uniformTextureSamplerPhong;
 
     // Buffers
-    GLuint meshVAO1, meshVAO2;
     GLuint meshVBO;
-    GLuint meshSize1, meshSize2;
 
-    // Texture
-    GLuint texturePtr1, texturePtr2;
+    int waiting = 0;
+
 
     // Transforms
     float scale = 1.f;
     QVector3D rotation;
     QMatrix4x4 projectionTransform;
-    QMatrix3x3 meshNormalTransform1;
-    QMatrix4x4 meshTransform1;
-    QMatrix3x3 meshNormalTransform2;
-    QMatrix4x4 meshTransform2;
+    QMatrix4x4 viewTransform;
+
+    QMatrix3x3 meshNormalTransform [4];
+    QMatrix4x4 meshTransform[4];
     float t = 0;
 
     // Phong model constants.
@@ -77,7 +78,12 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QVector3D lightPosition = {1, 100, 1};
     QVector3D lightColour = {1, 1, 1};
 
-    Properties meshProperties1;
+    Properties meshProperties[4];
+
+
+
+    float s = 0.015;
+    float q = 1;
 
 public:
     enum ShadingMode : GLuint
@@ -126,10 +132,17 @@ private:
 
     void updateProjectionTransform();
     void updateModelTransforms();
+    void updateViewTransform();
 
     void updateNormalUniforms();
     void updateGouraudUniforms();
     void updatePhongUniforms();
+
+    void updateFirstCat();
+    void updateSecondCat();
+    void updateFirstCube();
+    void updateSecondCube();
+
 
     void drawMesh(GLuint texturePtr, GLuint meshVAO, GLuint meshSize);
 

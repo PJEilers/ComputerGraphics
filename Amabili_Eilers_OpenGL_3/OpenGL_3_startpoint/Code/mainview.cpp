@@ -31,7 +31,7 @@ MainView::~MainView() {
 
     qDebug() << "MainView destructor";
 
-    glDeleteTextures(1, &meshProperties1.texID);
+    glDeleteTextures(1, &meshProperties[0].texID);
 
     destroyModelBuffers();
 }
@@ -108,12 +108,14 @@ void MainView::createShaderProgram()
     phongShaderProgram.link();
 
     // Get the uniforms for the normal shader.
-    uniformModelViewTransformNormal  = normalShaderProgram.uniformLocation("modelViewTransform");
+    uniformModelTransformNormal  = normalShaderProgram.uniformLocation("modelTransform");
+    uniformViewTransformNormal       = normalShaderProgram.uniformLocation("viewTransform");
     uniformProjectionTransformNormal = normalShaderProgram.uniformLocation("projectionTransform");
     uniformNormalTransformNormal     = normalShaderProgram.uniformLocation("normalTransform");
 
     // Get the uniforms for the gouraud shader.
-    uniformModelViewTransformGouraud  = gouraudShaderProgram.uniformLocation("modelViewTransform");
+    uniformModelTransformGouraud  = gouraudShaderProgram.uniformLocation("modelTransform");
+    uniformViewTransformGouraud       = gouraudShaderProgram.uniformLocation("viewTransform");
     uniformProjectionTransformGouraud = gouraudShaderProgram.uniformLocation("projectionTransform");
     uniformNormalTransformGouraud     = gouraudShaderProgram.uniformLocation("normalTransform");
     uniformMaterialGouraud            = gouraudShaderProgram.uniformLocation("material");
@@ -122,7 +124,8 @@ void MainView::createShaderProgram()
     uniformTextureSamplerGouraud      = gouraudShaderProgram.uniformLocation("textureSampler");
 
     // Get the uniforms for the phong shader.
-    uniformModelViewTransformPhong  = phongShaderProgram.uniformLocation("modelViewTransform");
+    uniformModelTransformPhong  = phongShaderProgram.uniformLocation("modelTransform");
+    uniformViewTransformPhong       = phongShaderProgram.uniformLocation("viewTransform");
     uniformProjectionTransformPhong = phongShaderProgram.uniformLocation("projectionTransform");
     uniformNormalTransformPhong     = phongShaderProgram.uniformLocation("normalTransform");
     uniformMaterialPhong            = phongShaderProgram.uniformLocation("material");
@@ -133,10 +136,14 @@ void MainView::createShaderProgram()
 
 void MainView::loadMeshes()
 {
-    meshSize1 = loadMesh(":/models/cat.obj", meshProperties1.vaoID);
-    setProperties(QVector3D(2,-1.5,-4), QVector3D(0,0,0), 0.03, meshSize1, meshProperties1);
-    meshSize2 = loadMesh(":/models/cube.obj", meshVAO2);
-
+    int meshSize1 = loadMesh(":/models/cat.obj", meshProperties[0].vaoID);
+    setProperties(QVector3D(2,-1.6,-4), QVector3D(0,0,0), 0.03, meshSize1, meshProperties[0]);
+    int meshSize2 = loadMesh(":/models/cube.obj", meshProperties[1].vaoID);
+    setProperties(QVector3D(-5,-4.5,-10), QVector3D(0,0,0), 0.06, meshSize2, meshProperties[1]);
+    int meshSize3 = loadMesh(":/models/cat.obj", meshProperties[2].vaoID);
+    setProperties(QVector3D(0,0,-8), QVector3D(0,270,0), 0.1, meshSize3, meshProperties[2]);
+    int meshSize4 = loadMesh(":/models/cube.obj", meshProperties[3].vaoID);
+    setProperties(QVector3D(-5,0,-8), QVector3D(0,0,0), 0, meshSize4, meshProperties[3]);
 }
 
 int MainView::loadMesh(QString filename, GLuint &meshVAO)
@@ -187,10 +194,14 @@ void MainView::drawMesh(GLuint texturePtr, GLuint meshVAO, GLuint meshSize)
 
 void MainView::loadTextures()
 {
-    glGenTextures(1, &meshProperties1.texID);
-    loadTexture(":/textures/cat_diff.png", meshProperties1.texID);
-    glGenTextures(1, &texturePtr2);
-    loadTexture(":/textures/rug_logo.png", texturePtr2);
+    glGenTextures(1, &meshProperties[0].texID);
+    loadTexture(":/textures/cat_diff.png", meshProperties[0].texID);
+    glGenTextures(1, &meshProperties[1].texID);
+    loadTexture(":/textures/brick.png", meshProperties[1].texID);
+    glGenTextures(1, &meshProperties[2].texID);
+    loadTexture(":/textures/cat_diff.png", meshProperties[2].texID);
+    glGenTextures(1, &meshProperties[3].texID);
+    loadTexture(":/textures/brick.png", meshProperties[3].texID);
 
 }
 
@@ -232,28 +243,31 @@ void MainView::paintGL() {
         shaderProgram = &normalShaderProgram;
         shaderProgram->bind();
         updateNormalUniforms();
-        drawMesh(meshProperties1.texID, meshProperties1.vaoID, meshSize1);
-        glUniformMatrix4fv(uniformModelViewTransformNormal, 1, GL_FALSE, meshTransform2.data());
-        glUniformMatrix3fv(uniformNormalTransformNormal, 1, GL_FALSE, meshNormalTransform2.data());
-        drawMesh(texturePtr2, meshVAO2, meshSize2);
+        for(int i = 0; i < 4 ; i++) {
+            glUniformMatrix4fv(uniformModelTransformNormal, 1, GL_FALSE, meshTransform[i].data());
+            glUniformMatrix3fv(uniformNormalTransformNormal, 1, GL_FALSE, meshNormalTransform[i].data());
+            drawMesh(meshProperties[i].texID, meshProperties[i].vaoID, meshProperties[i].meshSize);
+        }
         break;
     case GOURAUD:
         shaderProgram = &gouraudShaderProgram;
         shaderProgram->bind();
         updateGouraudUniforms();
-        drawMesh(meshProperties1.texID, meshProperties1.vaoID, meshSize1);
-        glUniformMatrix4fv(uniformModelViewTransformGouraud, 1, GL_FALSE, meshTransform2.data());
-        glUniformMatrix3fv(uniformNormalTransformGouraud, 1, GL_FALSE, meshNormalTransform2.data());
-        drawMesh(texturePtr2, meshVAO2, meshSize2);
+        for(int i = 0; i < 4  ; i++) {
+            glUniformMatrix4fv(uniformModelTransformGouraud, 1, GL_FALSE, meshTransform[i].data());
+            glUniformMatrix3fv(uniformNormalTransformGouraud, 1, GL_FALSE, meshNormalTransform[i].data());
+            drawMesh(meshProperties[i].texID, meshProperties[i].vaoID, meshProperties[i].meshSize);
+        }
         break;
     case PHONG:
         shaderProgram = &phongShaderProgram;
         shaderProgram->bind();
         updatePhongUniforms();
-        drawMesh(meshProperties1.texID, meshProperties1.vaoID, meshSize1);
-        glUniformMatrix4fv(uniformModelViewTransformPhong, 1, GL_FALSE, meshTransform2.data());
-        glUniformMatrix3fv(uniformNormalTransformPhong, 1, GL_FALSE, meshNormalTransform2.data());
-        drawMesh(texturePtr2, meshVAO2, meshSize2);
+        for(int i = 0; i < 4 ; i++) {
+            glUniformMatrix4fv(uniformModelTransformPhong, 1, GL_FALSE, meshTransform[i].data());
+            glUniformMatrix3fv(uniformNormalTransformPhong, 1, GL_FALSE, meshNormalTransform[i].data());
+            drawMesh(meshProperties[i].texID, meshProperties[i].vaoID, meshProperties[i].meshSize);
+        }
         break;
     }
 
@@ -279,15 +293,13 @@ void MainView::resizeGL(int newWidth, int newHeight)
 void MainView::updateNormalUniforms()
 {
     glUniformMatrix4fv(uniformProjectionTransformNormal, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformModelViewTransformNormal, 1, GL_FALSE, meshTransform1.data());
-    glUniformMatrix3fv(uniformNormalTransformNormal, 1, GL_FALSE, meshNormalTransform1.data());
+    glUniformMatrix4fv(uniformViewTransformNormal, 1, GL_FALSE, viewTransform.data());
 }
 
 void MainView::updateGouraudUniforms()
 {
     glUniformMatrix4fv(uniformProjectionTransformGouraud, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformModelViewTransformGouraud, 1, GL_FALSE, meshTransform1.data());
-    glUniformMatrix3fv(uniformNormalTransformGouraud, 1, GL_FALSE, meshNormalTransform1.data());
+    glUniformMatrix4fv(uniformViewTransformGouraud, 1, GL_FALSE, viewTransform.data());
 
     glUniform4fv(uniformMaterialGouraud, 1, &material[0]);
     glUniform3fv(uniformLightPositionGouraud, 1, &lightPosition[0]);
@@ -299,14 +311,13 @@ void MainView::updateGouraudUniforms()
 void MainView::updatePhongUniforms()
 {
     glUniformMatrix4fv(uniformProjectionTransformPhong, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformModelViewTransformPhong, 1, GL_FALSE, meshTransform1.data());
-    glUniformMatrix3fv(uniformNormalTransformPhong, 1, GL_FALSE, meshNormalTransform1.data());
+    glUniformMatrix4fv(uniformViewTransformPhong, 1, GL_FALSE, viewTransform.data());
 
     glUniform4fv(uniformMaterialPhong, 1, &material[0]);
     glUniform3fv(uniformLightPositionPhong, 1, &lightPosition[0]);
     glUniform3fv(uniformLightColourPhong, 1, &lightColour[0]);
 
-    glUniform1i(uniformTextureSamplerGouraud, 0);
+    glUniform1i(uniformTextureSamplerPhong, 0);
 }
 
 void MainView::updateProjectionTransform()
@@ -316,30 +327,22 @@ void MainView::updateProjectionTransform()
     projectionTransform.perspective(60, aspect_ratio, 0.2, 20);
 }
 
+void MainView::updateViewTransform() {
+    viewTransform.setToIdentity();
+    viewTransform.translate(0,0,-10);
+    viewTransform.rotate(QQuaternion::fromEulerAngles(rotation));
+    viewTransform.translate(0,0,10);
+}
+
 void MainView::updateModelTransforms()
 {
-    meshTransform1.setToIdentity();
+    updateFirstCat();
 
-    meshProperties1.rotation+= QVector3D(0,0,1);
-    if(meshProperties1.rotation.z() > 360) {
-        meshProperties1.rotation = QVector3D(0,0,0);
-        meshProperties1.speed = 0.03;
-    }
-    meshProperties1.location += QVector3D(0,meshProperties1.speed,0);
-    meshProperties1.speed -= 0.03/180.0;
-    meshTransform1.translate(meshProperties1.location);
-    meshTransform1.scale(scale);
-    meshTransform1.rotate(QQuaternion::fromEulerAngles(meshProperties1.rotation));
-    meshNormalTransform1 = meshTransform1.normalMatrix();
+    updateFirstCube();
 
+    updateSecondCat();
 
-    meshTransform2.setToIdentity();
-    meshTransform2.translate(-2, 0, -8);
-    meshTransform2.scale(scale*0.5);
-    meshTransform2.rotate(QQuaternion::fromEulerAngles(rotation));
-    meshNormalTransform2 = meshTransform2.normalMatrix();
-
-
+    updateSecondCube();
 
     update();
 }
@@ -349,7 +352,11 @@ void MainView::updateModelTransforms()
 void MainView::destroyModelBuffers()
 {
     glDeleteBuffers(1, &meshVBO);
-    glDeleteVertexArrays(1, &meshProperties1.vaoID);
+    for(int i = 0; i < 4; i++) {
+        glDeleteVertexArrays(1, &meshProperties[i].vaoID);
+        glDeleteTextures(1, &meshProperties[i].texID);
+    }
+
 }
 
 // --- Public interface
@@ -357,19 +364,96 @@ void MainView::destroyModelBuffers()
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 {
     rotation = { static_cast<float>(rotateX), static_cast<float>(rotateY), static_cast<float>(rotateZ) };
-    updateModelTransforms();
+    updateViewTransform();
 }
 
 void MainView::setScale(int newScale)
 {
     scale = static_cast<float>(newScale) / 100.f;
-    updateModelTransforms();
+    updateProjectionTransform();
 }
 
 void MainView::setShadingMode(ShadingMode shading)
 {
     qDebug() << "Changed shading to" << shading;
     currentShader = shading;
+}
+
+void MainView::updateFirstCat() {
+    meshTransform[0].setToIdentity();
+
+    meshProperties[0].rotation+= QVector3D(0,0,2);
+    if(meshProperties[0].rotation.z() > 720) {
+        meshProperties[0].rotation = QVector3D(0,0,0);
+        meshProperties[0].speed = 0.03;
+    }
+    meshProperties[0].location += QVector3D(0,meshProperties[0].speed,0);
+    meshProperties[0].speed -= 0.03/180.0;
+
+    meshTransform[0].translate(meshProperties[0].location);
+    meshTransform[0].rotate(QQuaternion::fromEulerAngles(meshProperties[0].rotation));
+
+    meshNormalTransform[0] = meshTransform[0].normalMatrix();
+}
+
+void MainView::updateSecondCat() {
+    if(waiting > 0) {
+        waiting -=1;
+    } else {
+        meshProperties[2].location += QVector3D(0,0,meshProperties[2].speed);
+        meshProperties[2].rotation += QVector3D(meshProperties[2].speed*30,0,meshProperties[2].speed*30);
+        if(meshProperties[2].rotation.z() >= 180) {
+            waiting = 300;
+            meshProperties[2].speed = - meshProperties[2].speed;
+        }
+        if(meshProperties[2].rotation.z() == 0) {
+            waiting = 300;
+            meshProperties[2].speed = - meshProperties[2].speed;
+        }
+    }
+
+
+
+
+    meshTransform[2].setToIdentity();
+    meshTransform[2].translate(meshProperties[2].location);
+    meshTransform[2].rotate(QQuaternion::fromEulerAngles(meshProperties[2].rotation));
+    meshNormalTransform[2] = meshTransform[2].normalMatrix();
+}
+
+void MainView::updateFirstCube() {
+    meshTransform[1].setToIdentity();
+
+    if(meshProperties[1].rotation.z() == 180) {
+        meshProperties[1].speed = 0.06;
+        s = -s;
+        q = -q;
+    }
+    if(meshProperties[1].rotation.z() == -1) {
+        meshProperties[1].speed = 0.06;
+        s = -s;
+        q = -q;
+    }
+
+    meshProperties[1].rotation+= QVector3D(0,0,q);
+    meshProperties[1].location += QVector3D(s,meshProperties[1].speed,0);
+    meshProperties[1].speed -= 0.06/90.0;
+    meshTransform[1].translate(meshProperties[1].location);
+    meshTransform[1].rotate(QQuaternion::fromEulerAngles(meshProperties[1].rotation));
+    meshNormalTransform[1] = meshTransform[1].normalMatrix();
+}
+
+void MainView::updateSecondCube() {
+    meshProperties[3].location += QVector3D(0, meshProperties[3].speed, 0);
+    meshProperties[3].speed-= 0.001;
+    if(meshProperties[3].location.y() <= -3.3) {
+        meshProperties[3].speed = -meshProperties[3].speed;
+    }
+
+    meshTransform[3].setToIdentity();
+    meshTransform[3].translate(meshProperties[3].location);
+    meshTransform[3].rotate(QQuaternion::fromEulerAngles(meshProperties[3].rotation));
+    meshNormalTransform[3] = meshTransform[3].normalMatrix();
 }
 
 // --- Private helpers
