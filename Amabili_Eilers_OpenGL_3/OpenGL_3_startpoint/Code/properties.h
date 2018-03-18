@@ -10,12 +10,12 @@ struct Properties
     QVector3D rotation;
     GLuint vaoID;
     GLuint texID;
-    float speed;
+    double speed;
     int meshSize;
 
 };
 
-void setProperties(QVector3D location, QVector3D rotation, float speed, int meshSize, Properties &p);
+void setProperties(QVector3D location, QVector3D rotation, double speed, int meshSize, Properties &p);
 
 
 #endif // PROPERTIES_H

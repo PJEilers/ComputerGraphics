@@ -134,7 +134,7 @@ void MainView::createShaderProgram()
 void MainView::loadMeshes()
 {
     meshSize1 = loadMesh(":/models/cat.obj", meshProperties1.vaoID);
-    setProperties(QVector3D(2,-1.5,-4), QVector3D(0,0,0), 0.01, meshSize1, meshProperties1);
+    setProperties(QVector3D(2,-1.5,-4), QVector3D(0,0,0), 0.03, meshSize1, meshProperties1);
     meshSize2 = loadMesh(":/models/cube.obj", meshVAO2);
 
 }
@@ -319,10 +319,15 @@ void MainView::updateProjectionTransform()
 void MainView::updateModelTransforms()
 {
     meshTransform1.setToIdentity();
-    meshProperties1.location += QVector3D(0,meshProperties1.speed,0);
-    meshProperties1.speed -= 0.01/180;
-    meshTransform1.translate(meshProperties1.location);
 
+    meshProperties1.rotation+= QVector3D(0,0,1);
+    if(meshProperties1.rotation.z() > 360) {
+        meshProperties1.rotation = QVector3D(0,0,0);
+        meshProperties1.speed = 0.03;
+    }
+    meshProperties1.location += QVector3D(0,meshProperties1.speed,0);
+    meshProperties1.speed -= 0.03/180.0;
+    meshTransform1.translate(meshProperties1.location);
     meshTransform1.scale(scale);
     meshTransform1.rotate(QQuaternion::fromEulerAngles(meshProperties1.rotation));
     meshNormalTransform1 = meshTransform1.normalMatrix();
