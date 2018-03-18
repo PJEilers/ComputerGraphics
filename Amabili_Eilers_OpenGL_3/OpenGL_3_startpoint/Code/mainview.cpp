@@ -31,7 +31,7 @@ MainView::~MainView() {
 
     qDebug() << "MainView destructor";
 
-    glDeleteTextures(1, &texturePtr);
+    glDeleteTextures(1, &texturePtr1);
 
     destroyModelBuffers();
 }
@@ -133,18 +133,19 @@ void MainView::createShaderProgram()
 
 void MainView::loadMeshes()
 {
-    loadMesh(":/models/cat_diff.obj", meshVAO1, meshVBO1);
-    loadMesh(":/models/cube.obj", meshVAO2, meshVBO2);
+    meshSize1 = loadMesh(":/models/cat.obj", meshVAO1);
+    meshProperties1.location = QVector3D(2,-1.5,-.4);
+    meshSize2 = loadMesh(":/models/cube.obj", meshVAO2);
 
 }
 
-void MainView::loadMesh(QString filename, GLuint meshVAO, GLuint meshVBO)
+int MainView::loadMesh(QString filename, GLuint &meshVAO)
 {
     Model model(filename);
     model.unitize();
     QVector<float> meshData = model.getVNTInterleaved();
 
-    this->meshSize = model.getVertices().size();
+    int meshSize = model.getVertices().size();
 
     // Generate VAO
     glGenVertexArrays(1, &meshVAO);
@@ -171,7 +172,7 @@ void MainView::loadMesh(QString filename, GLuint meshVAO, GLuint meshVBO)
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
+    return meshSize;
 }
 
 void MainView::drawMesh(GLuint texturePtr, GLuint meshVAO, GLuint meshSize)
@@ -180,7 +181,6 @@ void MainView::drawMesh(GLuint texturePtr, GLuint meshVAO, GLuint meshSize)
     glBindTexture(GL_TEXTURE_2D, texturePtr);
 
     glBindVertexArray(meshVAO);
-    glDrawArrays(GL_TRIANGLES, 0, meshSize);
     glDrawArrays(GL_TRIANGLES, 0, meshSize);
 
 }
@@ -232,22 +232,30 @@ void MainView::paintGL() {
         shaderProgram = &normalShaderProgram;
         shaderProgram->bind();
         updateNormalUniforms();
+        drawMesh(texturePtr1, meshVAO1, meshSize1);
+        glUniformMatrix4fv(uniformModelViewTransformNormal, 1, GL_FALSE, meshTransform2.data());
+        glUniformMatrix3fv(uniformNormalTransformNormal, 1, GL_FALSE, meshNormalTransform2.data());
+        drawMesh(texturePtr2, meshVAO2, meshSize2);
         break;
     case GOURAUD:
         shaderProgram = &gouraudShaderProgram;
         shaderProgram->bind();
         updateGouraudUniforms();
+        drawMesh(texturePtr1, meshVAO1, meshSize1);
+        glUniformMatrix4fv(uniformModelViewTransformGouraud, 1, GL_FALSE, meshTransform2.data());
+        glUniformMatrix3fv(uniformNormalTransformGouraud, 1, GL_FALSE, meshNormalTransform2.data());
+        drawMesh(texturePtr2, meshVAO2, meshSize2);
         break;
     case PHONG:
         shaderProgram = &phongShaderProgram;
         shaderProgram->bind();
         updatePhongUniforms();
+        drawMesh(texturePtr1, meshVAO1, meshSize1);
+        glUniformMatrix4fv(uniformModelViewTransformPhong, 1, GL_FALSE, meshTransform2.data());
+        glUniformMatrix3fv(uniformNormalTransformPhong, 1, GL_FALSE, meshNormalTransform2.data());
+        drawMesh(texturePtr2, meshVAO2, meshSize2);
         break;
     }
-
-    // Set the texture and draw the mesh.
-    drawMesh(texturePtr1, meshVAO1, meshSize1);
-    drawMesh(texturePtr2, meshVAO2, meshSize2);
 
     shaderProgram->release();
 
@@ -271,15 +279,15 @@ void MainView::resizeGL(int newWidth, int newHeight)
 void MainView::updateNormalUniforms()
 {
     glUniformMatrix4fv(uniformProjectionTransformNormal, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformModelViewTransformNormal, 1, GL_FALSE, meshTransform.data());
-    glUniformMatrix3fv(uniformNormalTransformNormal, 1, GL_FALSE, meshNormalTransform.data());
+    glUniformMatrix4fv(uniformModelViewTransformNormal, 1, GL_FALSE, meshTransform1.data());
+    glUniformMatrix3fv(uniformNormalTransformNormal, 1, GL_FALSE, meshNormalTransform1.data());
 }
 
 void MainView::updateGouraudUniforms()
 {
     glUniformMatrix4fv(uniformProjectionTransformGouraud, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformModelViewTransformGouraud, 1, GL_FALSE, meshTransform.data());
-    glUniformMatrix3fv(uniformNormalTransformGouraud, 1, GL_FALSE, meshNormalTransform.data());
+    glUniformMatrix4fv(uniformModelViewTransformGouraud, 1, GL_FALSE, meshTransform1.data());
+    glUniformMatrix3fv(uniformNormalTransformGouraud, 1, GL_FALSE, meshNormalTransform1.data());
 
     glUniform4fv(uniformMaterialGouraud, 1, &material[0]);
     glUniform3fv(uniformLightPositionGouraud, 1, &lightPosition[0]);
@@ -291,8 +299,8 @@ void MainView::updateGouraudUniforms()
 void MainView::updatePhongUniforms()
 {
     glUniformMatrix4fv(uniformProjectionTransformPhong, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformModelViewTransformPhong, 1, GL_FALSE, meshTransform.data());
-    glUniformMatrix3fv(uniformNormalTransformPhong, 1, GL_FALSE, meshNormalTransform.data());
+    glUniformMatrix4fv(uniformModelViewTransformPhong, 1, GL_FALSE, meshTransform1.data());
+    glUniformMatrix3fv(uniformNormalTransformPhong, 1, GL_FALSE, meshNormalTransform1.data());
 
     glUniform4fv(uniformMaterialPhong, 1, &material[0]);
     glUniform3fv(uniformLightPositionPhong, 1, &lightPosition[0]);
@@ -310,12 +318,21 @@ void MainView::updateProjectionTransform()
 
 void MainView::updateModelTransforms()
 {
-    meshTransform.setToIdentity();
-    meshTransform.translate(0, 0, -4);
-    meshTransform.scale(scale);
-    rotation += QVector3D(0,1,0);
-    meshTransform.rotate(QQuaternion::fromEulerAngles(rotation));
-    meshNormalTransform = meshTransform.normalMatrix();
+    meshTransform1.setToIdentity();
+    meshTransform1.translate(2, -1.5+t, -4);
+   // t+=0.01;
+    meshTransform1.scale(scale);
+    meshTransform1.rotate(QQuaternion::fromEulerAngles(rotation));
+    meshNormalTransform1 = meshTransform1.normalMatrix();
+
+
+    meshTransform2.setToIdentity();
+    meshTransform2.translate(-2, 0, -4);
+    meshTransform2.scale(scale*0.5);
+    meshTransform2.rotate(QQuaternion::fromEulerAngles(rotation));
+    meshNormalTransform2 = meshTransform2.normalMatrix();
+
+
 
     update();
 }
@@ -325,7 +342,7 @@ void MainView::updateModelTransforms()
 void MainView::destroyModelBuffers()
 {
     glDeleteBuffers(1, &meshVBO);
-    glDeleteVertexArrays(1, &meshVAO);
+    glDeleteVertexArrays(1, &meshVAO1);
 }
 
 // --- Public interface

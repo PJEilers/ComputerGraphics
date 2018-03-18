@@ -2,6 +2,7 @@
 #define MAINVIEW_H
 
 #include "model.h"
+#include "properties.h"
 
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -55,7 +56,7 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
 
     // Buffers
     GLuint meshVAO1, meshVAO2;
-    GLuint meshVBO1, meshVBO2;
+    GLuint meshVBO;
     GLuint meshSize1, meshSize2;
 
     // Texture
@@ -65,13 +66,18 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     float scale = 1.f;
     QVector3D rotation;
     QMatrix4x4 projectionTransform;
-    QMatrix3x3 meshNormalTransform;
-    QMatrix4x4 meshTransform;
+    QMatrix3x3 meshNormalTransform1;
+    QMatrix4x4 meshTransform1;
+    QMatrix3x3 meshNormalTransform2;
+    QMatrix4x4 meshTransform2;
+    float t = 0;
 
     // Phong model constants.
     QVector4D material = {0.5, 0.5, 1, 5};
     QVector3D lightPosition = {1, 100, 1};
     QVector3D lightColour = {1, 1, 1};
+
+    Properties meshProperties1;
 
 public:
     enum ShadingMode : GLuint
@@ -110,7 +116,7 @@ private:
     void createShaderProgram();
     void createInst();
     void loadMeshes();
-    void loadMesh(QString filename, GLuint meshVBO, GLuint meshVAO);
+    int loadMesh(QString filename, GLuint &meshVBO);
 
     // Loads texture data into the buffer of texturePtr.
     void loadTextures();
@@ -132,6 +138,7 @@ private:
 
     // The current shader to use.
     ShadingMode currentShader = PHONG;
+
 };
 
 #endif // MAINVIEW_H
